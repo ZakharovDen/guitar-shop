@@ -1,27 +1,30 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UserRepository } from './user.repository';
+import { UserEntity } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
+  constructor(private readonly userRepository: UserRepository) { }
 
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  public async create(dto: CreateUserDto): Promise<UserEntity> {
+    const { email, name, password } = dto;
+    const newUser = {
+      email, name, passwordHash: ''
+    };
+    const existUser = await this.userRepository.findByEmail(email);
+    if (existUser) {
+      throw new ConflictException('Пользователь с таким email уже существует.');
+    }
+    const userEntity = await new UserEntity(newUser).setPassword(password)
+    await this.userRepository.save(userEntity);
+    console.dir(userEntity);
+
+    return userEntity;
   }
 
-  findAll() {
-    return `This action returns all users`;
-  }
-
-  findOne(id: number) {
+  public async findOne(id: number) {
     return `This action returns a #${id} user`;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
-  }
 }

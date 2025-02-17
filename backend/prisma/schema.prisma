@@ -19,6 +19,7 @@ model User {
   email        String
   passwordHash String @map("password_hash")
 
+  @@unique([email])
   @@index([email])
   @@map("users")
 }

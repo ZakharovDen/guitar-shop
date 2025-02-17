@@ -13,4 +13,19 @@ export class UserRepository extends BasePostgresRepository<UserEntity, AuthUser>
   ) {
     super(entityFactory, client);
   }
+
+  public async save(entity: UserEntity): Promise<void> {
+    const data = entity.toPOJO();
+    const document = await this.client.user.create({ data });
+    entity.id = document.id;
+  }
+
+  public async findByEmail(email: string): Promise<UserEntity | null> {
+    const document = await this.client.user.findUnique({ where: { email } });
+    if (!document) {
+      return null;
+    }
+    return this.createEntityFromDocument(document);
+  }
+
 }
