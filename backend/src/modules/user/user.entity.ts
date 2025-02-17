@@ -2,7 +2,7 @@ import { Entity } from "src/core/base/entity";
 import { StorableEntity } from "src/core/interfaces/storable-entity.interface";
 import { AuthUser } from "src/core/types/user/auth-user.interface";
 import { compare, genSalt, hash } from 'bcrypt';
-import { SALT_ROUNDS } from "../user.constant";
+import { SALT_ROUNDS } from "./user.constant";
 
 export class UserEntity extends Entity implements StorableEntity<AuthUser> {
   public name: string;

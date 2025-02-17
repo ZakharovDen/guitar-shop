@@ -29,7 +29,7 @@ model Product {
   title        String
   description  String
   createdAt    DateTime @default(now()) @map("created_at")
-  photoPath    String?  @map("photo_path")
+  photoPath    String   @map("photo_path")
   type         String
   article      String
   stringsCount Int      @map("strings_count")

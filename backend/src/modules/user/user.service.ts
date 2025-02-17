@@ -1,7 +1,7 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserRepository } from './user.repository';
-import { UserEntity } from './entities/user.entity';
+import { UserEntity } from './user.entity';
 
 @Injectable()
 export class UserService {
@@ -18,8 +18,7 @@ export class UserService {
     }
     const userEntity = await new UserEntity(newUser).setPassword(password)
     await this.userRepository.save(userEntity);
-    console.dir(userEntity);
-
+    // TODO: send email
     return userEntity;
   }
 

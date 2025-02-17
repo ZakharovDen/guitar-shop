@@ -1,13 +1,16 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ProductsService } from './products.service';
+import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Товары')
 @Controller('products')
-export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+export class ProductController {
+  constructor(private readonly productsService: ProductService) { }
 
   @Post()
+  @ApiOperation({ summary: 'Создание нового товара' })
   create(@Body() createProductDto: CreateProductDto) {
     return this.productsService.create(createProductDto);
   }
