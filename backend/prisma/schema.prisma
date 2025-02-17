@@ -33,7 +33,7 @@ model Product {
   type         String
   article      String
   stringsCount Int      @map("strings_count")
-  price        Decimal
+  price        Float
 
   @@map("products")
 }

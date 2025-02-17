@@ -31,6 +31,6 @@ export class ProductService {
   }
 
   public async remove(id: string) {
-    return `This action removes a #${id} product`;
+    return await this.productRepository.deleteById(id);
   }
 }

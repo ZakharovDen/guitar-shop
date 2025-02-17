@@ -16,21 +16,25 @@ export class ProductController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'Получение списка товаров' })
   findAll() {
     return this.productsService.findAll();
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Получение детальной информации по товару' })
   findOne(@Param('id') id: string) {
     return this.productsService.findOne(id);
   }
 
   @Put(':id')
+  @ApiOperation({ summary: 'Редактирование товара' })
   update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
     return this.productsService.update(id, updateProductDto);
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Удаление товара' })
   remove(@Param('id') id: string) {
     return this.productsService.remove(id);
   }
