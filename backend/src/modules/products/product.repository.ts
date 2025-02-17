@@ -29,7 +29,7 @@ export class ProductRepository extends BasePostgresRepository<ProductEntity, Pro
     await this.client.product.delete({ where: { id } });
   }
 
-  public async findById(id: string): Promise<ProductEntity> {
+  public async findById(id: string): Promise<ProductEntity | null> {
     const document = await this.client.product.findUnique({ where: { id } });
     if (!document) {
       throw new NotFoundException(`Product with id = ${id} not found.`);
@@ -37,7 +37,7 @@ export class ProductRepository extends BasePostgresRepository<ProductEntity, Pro
     return this.createEntityFromDocument(document);
   }
 
-  public async findAll(): Promise<ProductEntity[]> {
+  public async findAll(): Promise<(ProductEntity | null)[]> {
     const documents = await this.client.product.findMany();
     return documents.map((document) => this.createEntityFromDocument(document));
   }

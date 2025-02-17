@@ -17,11 +17,11 @@ export class ProductService {
   }
 
   public async findAll() {
-    return `This action returns all products`;
+    return this.productRepository.findAll();
   }
 
   public async findOne(id: string) {
-    return `This action returns a #${id} product`;
+    return this.productRepository.findById(id);
   }
 
   public async update(id: string, dto: UpdateProductDto) {
