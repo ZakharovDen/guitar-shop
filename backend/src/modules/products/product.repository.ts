@@ -19,4 +19,9 @@ export class ProductRepository extends BasePostgresRepository<ProductEntity, Pro
     const document = await this.client.product.create({ data });
     entity.id = document.id;
   }
+
+  public async update(entity: ProductEntity): Promise<void> {
+    const data = entity.toPOJO();
+    await this.client.product.update({ data, where: { id: data.id } });
+  }
 }

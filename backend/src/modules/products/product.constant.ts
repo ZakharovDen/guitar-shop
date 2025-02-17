@@ -2,6 +2,7 @@ import { GuitarStringsCount } from "src/core/types/product/guitar-strings-count"
 import { GuitarType } from "src/core/types/product/guitar-type";
 
 export const ProductFieldDescription = {
+  Id: { description: 'Уникальный идентификатор', example: '05020c43-36c4-413a-8e0f-f3cf60fe8bbe' },
   Title: { description: 'Наименование', example: 'СURT Z30 Plus' },
   Description: {
     description: 'Описание товара',

@@ -20,15 +20,17 @@ export class ProductService {
     return `This action returns all products`;
   }
 
-  public async findOne(id: number) {
+  public async findOne(id: string) {
     return `This action returns a #${id} product`;
   }
 
-  public async update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  public async update(id: string, dto: UpdateProductDto) {
+    const productEntity = new ProductEntity({ ...dto, id });
+    await this.productRepository.update(productEntity);
+    return productEntity;
   }
 
-  public async remove(id: number) {
+  public async remove(id: string) {
     return `This action removes a #${id} product`;
   }
 }
