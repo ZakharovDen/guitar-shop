@@ -6,6 +6,7 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors();
   const globalPrefix = 'api';
   const port = process.env.PORT ?? 3000;
   app.setGlobalPrefix(globalPrefix);
