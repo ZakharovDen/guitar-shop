@@ -1,6 +1,6 @@
 import { GuitarStrings } from "../../constant";
 
-function FilterGuitarStringsCount(): JSX.Element {
+function FilterGuitarStrings(): JSX.Element {
   return (
     <fieldset className="catalog-filter__block">
       <legend className="catalog-filter__block-title">Количество струн</legend>
@@ -14,4 +14,4 @@ function FilterGuitarStringsCount(): JSX.Element {
   );
 }
 
-export default FilterGuitarStringsCount;
+export default FilterGuitarStrings;
