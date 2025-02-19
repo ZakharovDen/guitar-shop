@@ -41,3 +41,18 @@ export const ProductValidateMessage = {
   Description: `Min length for Description is ${ProductValidateValue.Description.MinLength}, max is ${ProductValidateValue.Description.MaxLength}`,
   Article: `Min length for Article is ${ProductValidateValue.Article.MinLength}, max is ${ProductValidateValue.Article.MaxLength}`,
 } as const;
+
+export enum SortDirection {
+  Asc = 'asc',
+  Desc = 'desc',
+}
+
+export enum SortField {
+  CreateDate = 'Дата добавления',
+  Price = 'Цена',
+};
+
+export const DEFAULT_ITEM_COUNT_LIMIT = 7;
+export const DEFAULT_SORT_DIRECTION = SortDirection.Asc;
+export const DEFAULT_PAGE_COUNT = 1;
+export const DEFAULT_SORT_FIELD = SortField.CreateDate;

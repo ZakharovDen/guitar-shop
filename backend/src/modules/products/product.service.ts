@@ -3,6 +3,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductRepository } from './product.repository';
 import { ProductEntity } from './product.entity';
+import { ProductQuery } from './product.query';
 
 @Injectable()
 export class ProductService {
@@ -16,8 +17,8 @@ export class ProductService {
     return productEntity;
   }
 
-  public async findAll() {
-    return this.productRepository.findAll();
+  public async findAll(query?: ProductQuery) {
+    return this.productRepository.findAll(query);
   }
 
   public async findOne(id: string) {

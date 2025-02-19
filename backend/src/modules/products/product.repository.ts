@@ -4,6 +4,10 @@ import { ProductEntity } from "./product.entity";
 import { Product } from "src/core/types/product/product.interface";
 import { ProductFactory } from "./product.factory";
 import { PrismaClientService } from "prisma/prisma-client.service";
+import { ProductQuery } from "./product.query";
+import { Prisma } from "@prisma/client";
+import { SortField } from "./product.constant";
+import { PaginationResult } from "src/core/interfaces/pagination.interface";
 
 @Injectable()
 export class ProductRepository extends BasePostgresRepository<ProductEntity, Product> {
@@ -37,8 +41,45 @@ export class ProductRepository extends BasePostgresRepository<ProductEntity, Pro
     return this.createEntityFromDocument(document);
   }
 
-  public async findAll(): Promise<(ProductEntity | null)[]> {
-    const documents = await this.client.product.findMany();
-    return documents.map((document) => this.createEntityFromDocument(document));
+  public async findAll(query?: ProductQuery): Promise<PaginationResult<ProductEntity>> {
+    const skip = query?.page && query?.limit ? (query.page - 1) * query.limit : undefined;
+    const take = query?.limit ? query?.limit : undefined;
+    const where: Prisma.ProductWhereInput = {};
+    let orderBy: Prisma.ProductOrderByWithRelationInput = {};
+    if (query.sortField === SortField.CreateDate) {
+      orderBy = { createdAt: query.sortDirection };
+    }
+    if (query.sortField === SortField.Price) {
+      orderBy = { price: query.sortDirection };
+    }
+
+    if (query?.guitarType) {
+      if (typeof query.guitarType === 'string') {
+        where.type = {
+          equals: query.guitarType
+        }
+      } else {
+        where.type = {
+          in: query.guitarType
+        }
+      }
+    }
+    if (query?.guitarStringsCount) {
+      where.stringsCount = {
+        in: query.guitarStringsCount
+      }
+    }
+    const [documents, documentsCount] = await Promise.all([
+      this.client.product.findMany({ where, orderBy, skip, take }),
+      this.client.product.count({ where }),
+    ]);
+
+    return {
+      currentPage: query?.page,
+      totalPages: Math.ceil(documentsCount / take),
+      itemsPerPage: take,
+      totalItems: documentsCount,
+      entities: documents.map((document) => this.createEntityFromDocument(document)),
+    }
   }
 }
