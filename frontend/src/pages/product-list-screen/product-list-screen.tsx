@@ -1,10 +1,13 @@
+import { useNavigate } from "react-router-dom";
 import Catalog from "../../components/catalog/catalog";
 import Filter from "../../components/filter/filter";
 import { useAppSelector } from "../../hooks";
 import { getProducts } from "../../store/products/selectors";
+import { AppRoute } from "../../constant";
 
 function ProductListScreen(): JSX.Element {
   const products = useAppSelector(getProducts);
+  const navigate = useNavigate();
 
   return (
     <main className="page-content">
@@ -32,7 +35,11 @@ function ProductListScreen(): JSX.Element {
             </div>
             <Catalog products={products} />
           </div>
-          <button className="button product-list__button button--red button--big">Добавить новый товар</button>
+          <button
+            className="button product-list__button button--red button--big"
+            onClick={() => { navigate(AppRoute.ProductAdd) }}
+          >Добавить новый товар
+          </button>
           <div className="pagination product-list__pagination">
             <ul className="pagination__list">
               <li className="pagination__page pagination__page--active"><a className="link pagination__page-link" href="1">1</a>

@@ -4,8 +4,9 @@ import LoginScreen from '../../pages/login-screen/login-screen';
 import ErrorScreen from '../../pages/error-screen/error-screen';
 import RegistrationScreen from '../../pages/registration-screen/registration-screen';
 import ProductListScreen from '../../pages/product-list-screen/product-list-screen';
-import ProductScreen from '../../pages/product-screen/product-screen';
+import ProductInfoScreen from '../../pages/product-info-screen/product-info-screen';
 import Layout from '../layout/layout';
+import ProductSaveScreen from '../../pages/product-save-screen/product-save-screen';
 
 function App(): JSX.Element {
   return (
@@ -20,6 +21,10 @@ function App(): JSX.Element {
             element={<LoginScreen />}
           />
           <Route
+            path={AppRoute.ProductAdd}
+            element={<ProductSaveScreen />}
+          />
+          <Route
             path={AppRoute.Registration}
             element={<RegistrationScreen />}
           />
@@ -29,7 +34,7 @@ function App(): JSX.Element {
           />
           <Route
             path={AppRoute.ProductInfo}
-            element={<ProductScreen />}
+            element={<ProductInfoScreen />}
           />
           <Route
             path="*"

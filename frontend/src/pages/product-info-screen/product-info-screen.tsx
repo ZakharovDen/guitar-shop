@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { AppRoute } from "../../constant";
 
-function ProductScreen(): JSX.Element {
+function ProductInfoScreen(): JSX.Element {
   return (
     <main className="page-content">
       <div className="container">
@@ -50,4 +50,4 @@ function ProductScreen(): JSX.Element {
   );
 }
 
-export default ProductScreen;
+export default ProductInfoScreen;
