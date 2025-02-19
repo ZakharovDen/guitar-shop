@@ -6,7 +6,8 @@ import RegistrationScreen from '../../pages/registration-screen/registration-scr
 import ProductListScreen from '../../pages/product-list-screen/product-list-screen';
 import ProductInfoScreen from '../../pages/product-info-screen/product-info-screen';
 import Layout from '../layout/layout';
-import ProductSaveScreen from '../../pages/product-save-screen/product-save-screen';
+import AddProductScreen from '../../pages/add-product-screen/add-product-screen';
+import EditProductScreen from '../../pages/edit-product-screen/edit-product-screen';
 
 function App(): JSX.Element {
   return (
@@ -22,7 +23,11 @@ function App(): JSX.Element {
           />
           <Route
             path={AppRoute.ProductAdd}
-            element={<ProductSaveScreen />}
+            element={<AddProductScreen />}
+          />
+          <Route
+            path={AppRoute.ProductEdit}
+            element={<EditProductScreen />}
           />
           <Route
             path={AppRoute.Registration}
