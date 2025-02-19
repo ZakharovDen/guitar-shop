@@ -2,13 +2,17 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Logger, ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
   const globalPrefix = 'api';
-  const port = process.env.PORT ?? 3000;
+  const configService = app.get(ConfigService);
+  const port = configService.get('application.port');
+  //await app.listen(port);
+  //const port = process.env.PORT ?? 3000;
   app.setGlobalPrefix(globalPrefix);
   const config = new DocumentBuilder()
     .setTitle('The «Guitar Shop» application')

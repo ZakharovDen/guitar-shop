@@ -6,10 +6,19 @@ import { FileUploaderController } from "./file-uploader.controller";
 
 @Module({
   imports: [
-    ConfigModule,
-    ServeStaticModule.forRoot({
-      rootPath: 'C:\\projects\\guitar-shop\\backend\\uploads',
-      serveRoot: '/static'
+    ServeStaticModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        const rootPath = configService.get<string>('application.fileUploader.rootPath');
+        return [{
+          rootPath,
+          serveRoot: configService.get<string>('application.fileUploader.serveRoot'),
+          serveStaticOptions: {
+            fallthrough: true,
+            etag: true,
+          }
+        }]
+      }
     }),
   ],
   providers: [FileUploaderService],
