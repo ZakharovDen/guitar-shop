@@ -1,5 +1,5 @@
 import { Transform } from 'class-transformer';
-import { IsArray, IsEnum, IsIn, IsMongoId, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsIn, IsNumber, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { DEFAULT_ITEM_COUNT_LIMIT, DEFAULT_SORT_DIRECTION, DEFAULT_PAGE_COUNT, SortField, DEFAULT_SORT_FIELD, SortDirection } from './product.constant';
 import { GuitarType } from 'src/core/types/product/guitar-type';
@@ -28,14 +28,13 @@ export class ProductQuery {
   @IsOptional()
   public page?: number = DEFAULT_PAGE_COUNT;
 
-  @ApiProperty({ description: 'Тип гитар', required: false, type: 'array' })
-  //@IsArray()
+  @ApiProperty({ description: 'Тип гитар', required: false, enum: GuitarType })
   @IsIn(Object.values(GuitarType), { each: true })
   @IsOptional()
   public guitarType?: GuitarType[];
 
   @ApiProperty({ description: 'Количество струн', enum: GuitarStringsCount, required: false })
-  @IsArray()
+  @Transform(({ value }) => +value)
   @IsIn(Object.values(GuitarStringsCount), { each: true })
   @IsOptional()
   public guitarStringsCount?: GuitarStringsCount[];

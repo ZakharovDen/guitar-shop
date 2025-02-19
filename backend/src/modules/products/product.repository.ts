@@ -65,8 +65,14 @@ export class ProductRepository extends BasePostgresRepository<ProductEntity, Pro
       }
     }
     if (query?.guitarStringsCount) {
-      where.stringsCount = {
-        in: query.guitarStringsCount
+      if (typeof query.guitarStringsCount === 'number') {
+        where.stringsCount = {
+          equals: query.guitarStringsCount
+        }
+      } else {
+        where.stringsCount = {
+          in: query.guitarStringsCount
+        }
       }
     }
     const [documents, documentsCount] = await Promise.all([
