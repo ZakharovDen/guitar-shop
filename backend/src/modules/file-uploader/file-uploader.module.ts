@@ -9,9 +9,8 @@ import { FileUploaderController } from "./file-uploader.controller";
     ServeStaticModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const rootPath = configService.get<string>('application.fileUploader.rootPath');
         return [{
-          rootPath,
+          rootPath: configService.get<string>('application.fileUploader.rootPath'),
           serveRoot: configService.get<string>('application.fileUploader.serveRoot'),
           serveStaticOptions: {
             fallthrough: true,

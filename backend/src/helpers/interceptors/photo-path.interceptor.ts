@@ -10,11 +10,10 @@ export class FilePathInterceptor implements NestInterceptor {
   constructor(private readonly configService: ConfigService) { }
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    const host = this.configService.get<string>('HOST') || 'localhost';
-    const port = this.configService.get<number>('PORT');
-    const serveRoot = this.configService.get<number>('SERVE_ROOT');
-    const protocol = this.configService.get<string>('PROTOCOL') || 'http';
-    const baseUrl = `${protocol}://${host}:${port}`;
+    const host = this.configService.get<string>('host') || 'localhost';
+    const port = this.configService.get<number>('port');
+    const serveRoot = this.configService.get<number>('application.fileUploader.serveRoot');
+    const baseUrl = `http://${host}:${port}`;
 
     return next.handle().pipe(
       map((data: ProductRdo | ProductRdo[] | ProductWithPaginationRdo) => {

@@ -9,7 +9,6 @@ import { FileUploaderService } from '../file-uploader/file-uploader.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ProductRdo } from './rdo/product-rdo';
 import { ProductWithPaginationRdo } from './rdo/product-with-pagination.rdo';
-import { plainToInstance } from 'class-transformer';
 import { FilePathInterceptor } from 'src/helpers/interceptors/photo-path.interceptor';
 
 @ApiTags('Товары')

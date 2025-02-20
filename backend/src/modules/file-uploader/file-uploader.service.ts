@@ -17,7 +17,7 @@ export class FileUploaderService {
   constructor(private readonly configService: ConfigService) { }
 
   private getUploadDirectoryPath(): string {
-    return this.configService.get<string>('UPLOAD_DIRECTORY_PATH');
+    return this.configService.get<string>('application.fileUploader.rootPath');
   }
 
   private getDestinationFilePath(filename: string): string {
