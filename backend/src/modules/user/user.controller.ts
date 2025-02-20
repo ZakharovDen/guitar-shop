@@ -34,7 +34,8 @@ export class UserController {
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED })
   @Post('login')
   public async login(@Body() loginUserDto: LoginUserDto) {
-    const userToken = await this.usersService.createUserToken(loginUserDto);
+    const user = await this.usersService.verifyUser(loginUserDto);
+    const userToken = await this.usersService.createUserToken(user);
     return userToken;
   }
 }

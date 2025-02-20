@@ -1,4 +1,4 @@
-import { ConflictException, HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import { ConflictException, HttpException, HttpStatus, Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserRepository } from './user.repository';
 import { UserEntity } from './user.entity';
@@ -6,6 +6,7 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { Token } from 'src/core/interfaces/token.interface';
 import { createJWTPayload } from 'src/helpers/jwt';
 import { JwtService } from '@nestjs/jwt';
+import { AUTH_USER_NOT_FOUND, AUTH_USER_PASSWORD_WRONG } from './user.constant';
 
 @Injectable()
 export class UserService {
@@ -30,8 +31,22 @@ export class UserService {
     return userEntity;
   }
 
-  public async createUserToken(dto: LoginUserDto): Promise<Token> {
-    const user = await this.userRepository.findByEmail(dto.email);
+  public async verifyUser(dto: LoginUserDto): Promise<UserEntity> {
+    const { email, password } = dto;
+    const existUser = await this.userRepository.findByEmail(email);
+
+    if (!existUser) {
+      throw new NotFoundException(AUTH_USER_NOT_FOUND);
+    }
+
+    if (!await existUser.comparePassword(password)) {
+      throw new UnauthorizedException(AUTH_USER_PASSWORD_WRONG);
+    }
+
+    return existUser;
+  }
+
+  public async createUserToken(user: UserEntity): Promise<Token> {
     const accessTokenPayload = createJWTPayload(user);
     try {
       const accessToken = await this.jwtService.signAsync(accessTokenPayload);

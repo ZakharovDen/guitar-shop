@@ -1,14 +1,33 @@
+import { FormEvent, useRef } from "react";
+import { useAppDispatch } from "../../hooks";
+import { loginAction } from "../../store/user/thunks";
+
 function LoginScreen(): JSX.Element {
+  const loginRef = useRef<HTMLInputElement | null>(null);
+  const passwordRef = useRef<HTMLInputElement | null>(null);
+  const dispatch = useAppDispatch();
+
+  const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
+    evt.preventDefault();
+
+    if (loginRef.current !== null && passwordRef.current !== null) {
+      dispatch(loginAction({
+        login: loginRef.current.value,
+        password: passwordRef.current.value
+      }));
+    }
+  };
   return (
     <main className="page-content">
       <div className="container">
         <section className="login">
           <h1 className="login__title">Войти</h1>
           <p className="login__text">Hовый пользователь? <a className="login__link" href="registration.html">Зарегистрируйтесь</a> прямо сейчас</p>
-          <form method="post" action="/">
+          <form method="post" action="/" onSubmit={handleSubmit}>
             <div className="input-login">
               <label htmlFor="email">Введите e-mail</label>
               <input
+                ref={loginRef}
                 type="email"
                 id="email"
                 name="email"
@@ -22,6 +41,7 @@ function LoginScreen(): JSX.Element {
               <label htmlFor="passwordLogin">Введите пароль</label>
               <span>
                 <input
+                  ref={passwordRef}
                   type="password"
                   placeholder="• • • • • • • • • • • •"
                   id="passwordLogin"

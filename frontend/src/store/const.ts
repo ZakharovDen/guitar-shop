@@ -1,7 +1,7 @@
 export enum APIRoute {
   Products = '/products',
-  Login = '/login',
-  Logout = '/logout',
+  Login = '/users/login',
+  Logout = 'users/logout',
 }
 
 export enum NameSpace {
