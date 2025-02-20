@@ -29,6 +29,10 @@ export interface ApplicationConfig {
     password: string;
     from: string;
   },
+  jwt: {
+    accessTokenSecret: string;
+    accessTokenExpiresIn: string;
+  }
 }
 
 const validationSchema = Joi.object({
@@ -56,6 +60,10 @@ const validationSchema = Joi.object({
     password: Joi.string().required(),
     from: Joi.string().required(),
   }),
+  jwt: Joi.object({
+    accessTokenSecret: Joi.string().required(),
+    accessTokenExpiresIn: Joi.string().required(),
+  })
 });
 
 function validateConfig(config: ApplicationConfig): void {
@@ -91,6 +99,10 @@ function getConfig(): ApplicationConfig {
       password: process.env.MAIL_USER_PASSWORD,
       from: process.env.MAIL_FROM,
     },
+    jwt: {
+      accessTokenSecret: process.env.JWT_ACCESS_TOKEN_SECRET,
+      accessTokenExpiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN,
+    }
   };
 
   validateConfig(config);
