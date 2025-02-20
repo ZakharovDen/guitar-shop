@@ -8,10 +8,16 @@ import { MailModule } from '../mail-module/mail.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { getJwtOptions } from 'src/helpers/jwt';
+import { JwtAccessStrategy } from './strategies/jwt-access.strategy';
 
 @Module({
   controllers: [UserController],
-  providers: [UserService, UserRepository, UserFactory],
+  providers: [
+    UserService,
+    UserRepository,
+    UserFactory,
+    JwtAccessStrategy,
+  ],
   imports: [
     PrismaClientModule,
     MailModule,

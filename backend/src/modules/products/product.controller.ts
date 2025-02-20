@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Body, Param, Delete, Put, Query, UploadedFile, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, UseInterceptors, SerializeOptions } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, Query, UploadedFile, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, UseInterceptors, SerializeOptions, UseGuards } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ProductQuery } from './product.query';
 import { PhotoParams } from './product.constant';
 import { FileUploaderService } from '../file-uploader/file-uploader.service';
@@ -10,6 +10,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ProductRdo } from './rdo/product-rdo';
 import { ProductWithPaginationRdo } from './rdo/product-with-pagination.rdo';
 import { FilePathInterceptor } from 'src/helpers/interceptors/photo-path.interceptor';
+import { JwtAuthGuard } from '../user/guards/jwt-auth.guard';
 
 @ApiTags('Товары')
 @UseInterceptors(FilePathInterceptor)
@@ -47,7 +48,9 @@ export class ProductController {
 
   @Get()
   @ApiOperation({ summary: 'Получение списка товаров' })
+  @ApiBearerAuth()
   @SerializeOptions({ type: ProductWithPaginationRdo })
+  @UseGuards(JwtAuthGuard)
   public async findAll(@Query() query: ProductQuery) {
     return this.productsService.findAll(query);
   }
