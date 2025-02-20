@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { AppRoute } from '../../constant';
+import { AppRoute, AuthorizationStatus } from '../../constant';
 import LoginScreen from '../../pages/login-screen/login-screen';
 import ErrorScreen from '../../pages/error-screen/error-screen';
 import RegistrationScreen from '../../pages/registration-screen/registration-screen';
@@ -8,6 +8,7 @@ import ProductInfoScreen from '../../pages/product-info-screen/product-info-scre
 import Layout from '../layout/layout';
 import AddProductScreen from '../../pages/add-product-screen/add-product-screen';
 import EditProductScreen from '../../pages/edit-product-screen/edit-product-screen';
+import PrivateRoute from '../private-route/private-route';
 
 function App(): JSX.Element {
   return (
@@ -17,29 +18,46 @@ function App(): JSX.Element {
           path={AppRoute.Main}
           element={<Layout />}
         >
-          <Route
-            index
-            element={<LoginScreen />}
-          />
+          <Route index element={<LoginScreen />} />
           <Route
             path={AppRoute.ProductAdd}
-            element={<AddProductScreen />}
+            element={
+              <PrivateRoute restrictedFor={AuthorizationStatus.NoAuth} redirectTo={AppRoute.Main}>
+                <AddProductScreen />
+              </PrivateRoute>
+            }
           />
           <Route
             path={AppRoute.ProductEdit}
-            element={<EditProductScreen />}
+            element={
+              <PrivateRoute restrictedFor={AuthorizationStatus.NoAuth} redirectTo={AppRoute.Main}>
+                <EditProductScreen />
+              </PrivateRoute>
+            }
           />
           <Route
             path={AppRoute.Registration}
-            element={<RegistrationScreen />}
+            element={
+              //<PrivateRoute restrictedFor={AuthorizationStatus.Auth} redirectTo={AppRoute.ProductList}>
+              <RegistrationScreen />
+              //</PrivateRoute>
+            }
           />
           <Route
             path={AppRoute.ProductList}
-            element={<ProductListScreen />}
+            element={
+              <PrivateRoute restrictedFor={AuthorizationStatus.NoAuth} redirectTo={AppRoute.Main}>
+                <ProductListScreen />
+              </PrivateRoute>
+            }
           />
           <Route
             path={AppRoute.ProductInfo}
-            element={<ProductInfoScreen />}
+            element={
+              <PrivateRoute restrictedFor={AuthorizationStatus.NoAuth} redirectTo={AppRoute.Main}>
+                <ProductInfoScreen />
+              </PrivateRoute>
+            }
           />
           <Route
             path="*"
