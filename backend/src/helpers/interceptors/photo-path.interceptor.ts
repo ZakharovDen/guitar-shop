@@ -13,11 +13,8 @@ export class FilePathInterceptor implements NestInterceptor {
     const host = this.configService.get<string>('HOST') || 'localhost';
     const port = this.configService.get<number>('PORT');
     const serveRoot = this.configService.get<number>('SERVE_ROOT');
-    console.log(host, port)
     const protocol = this.configService.get<string>('PROTOCOL') || 'http';
-
     const baseUrl = `${protocol}://${host}:${port}`;
-
 
     return next.handle().pipe(
       map((data: ProductRdo | ProductRdo[] | ProductWithPaginationRdo) => {
