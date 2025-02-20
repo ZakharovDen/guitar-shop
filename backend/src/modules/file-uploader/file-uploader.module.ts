@@ -1,8 +1,7 @@
 import { Module } from "@nestjs/common";
-import { ConfigModule, ConfigService } from "@nestjs/config";
+import { ConfigService } from "@nestjs/config";
 import { FileUploaderService } from "./file-uploader.service";
 import { ServeStaticModule } from "@nestjs/serve-static";
-import { FileUploaderController } from "./file-uploader.controller";
 
 @Module({
   imports: [
@@ -22,6 +21,5 @@ import { FileUploaderController } from "./file-uploader.controller";
   ],
   providers: [FileUploaderService],
   exports: [FileUploaderService],
-  controllers: [FileUploaderController],
 })
 export class FileUploaderModule { }

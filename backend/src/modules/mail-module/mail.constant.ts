@@ -1,0 +1,1 @@
+export const EMAIL_REGISTER_SUBJECT = 'Вы успешно зарегистрированы в Guitar Shop!';
