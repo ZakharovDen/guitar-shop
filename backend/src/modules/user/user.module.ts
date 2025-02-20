@@ -7,7 +7,7 @@ import { UserFactory } from './user.factory';
 import { MailModule } from '../mail-module/mail.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { getJwtOptions } from 'src/helpers/get-jwt-options';
+import { getJwtOptions } from 'src/helpers/jwt';
 
 @Module({
   controllers: [UserController],
