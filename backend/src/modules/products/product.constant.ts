@@ -56,3 +56,8 @@ export const DEFAULT_ITEM_COUNT_LIMIT = 7;
 export const DEFAULT_SORT_DIRECTION = SortDirection.Asc;
 export const DEFAULT_PAGE_COUNT = 1;
 export const DEFAULT_SORT_FIELD = SortField.CreateDate;
+
+export const PhotoParams = {
+  MaxSize: 1000000,
+  FileType: /(jpg|jpeg|png)$/,
+} as const;

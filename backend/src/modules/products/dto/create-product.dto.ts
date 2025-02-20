@@ -3,6 +3,7 @@ import { ProductFieldDescription, ProductValidateMessage, ProductValidateValue }
 import { IsDateString, IsEnum, IsNotEmpty, IsString, Length, Max, Min } from "class-validator";
 import { GuitarType } from "src/core/types/product/guitar-type";
 import { GuitarStringsCount } from "src/core/types/product/guitar-strings-count";
+import { Transform } from "class-transformer";
 
 export class CreateProductDto {
   @ApiProperty(ProductFieldDescription.Title)
@@ -18,10 +19,15 @@ export class CreateProductDto {
   @IsNotEmpty()
   createdAt: Date;
 
-  @ApiProperty(ProductFieldDescription.PhotoPath)
-  @IsString()
-  @IsNotEmpty()
   photoPath: string;
+
+  @ApiProperty({
+    description: 'Фотография',
+    type: 'string',
+    format: 'binary',
+    required: true
+  })
+  public photo: Express.Multer.File;
 
   @ApiProperty(ProductFieldDescription.Type)
   @IsEnum(GuitarType)
@@ -35,10 +41,12 @@ export class CreateProductDto {
   @ApiProperty(ProductFieldDescription.StringsCount)
   @IsEnum(GuitarStringsCount)
   @IsNotEmpty()
+  @Transform(({ value }) => +value)
   stringsCount: GuitarStringsCount;
 
   @ApiProperty(ProductFieldDescription.Price)
   @Min(ProductValidateValue.Price.Min)
   @Max(ProductValidateValue.Price.Max)
+  @Transform(({ value }) => +value)
   price: number;
 }
