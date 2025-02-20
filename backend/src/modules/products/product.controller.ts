@@ -40,7 +40,6 @@ export class ProductController {
   ) {
     if (photo) {
       const photoData = await this.fileUploaderService.writeFile(photo);
-      console.dir(photoData);
       dto.photoPath = `${photoData.subDirectory}\\${photoData.filename}`;
     }
     delete dto.photo;
@@ -63,8 +62,28 @@ export class ProductController {
 
   @Put(':id')
   @ApiOperation({ summary: 'Редактирование товара' })
-  public async update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-    return this.productsService.update(id, updateProductDto);
+  @UseInterceptors(FileInterceptor('photo'))
+  @ApiConsumes('multipart/form-data')
+  @SerializeOptions({ type: ProductRdo })
+  public async update(
+    @Param('id') id: string,
+    @Body() dto: UpdateProductDto,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: PhotoParams.MaxSize }),
+          new FileTypeValidator({ fileType: PhotoParams.FileType }),
+        ],
+        fileIsRequired: true,
+      })
+    ) photo: Express.Multer.File
+  ) {
+    if (photo) {
+      const photoData = await this.fileUploaderService.writeFile(photo);
+      dto.photoPath = `${photoData.subDirectory}\\${photoData.filename}`;
+    }
+    delete dto.photo;
+    return this.productsService.update(id, dto);
   }
 
   @Delete(':id')
