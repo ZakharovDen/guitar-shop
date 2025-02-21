@@ -53,4 +53,6 @@ export const GuitarTypes = [
     name: 'ukulele',
     label: 'Укулеле',
   },
-] as const
+] as const;
+
+export type GuitarType = typeof GuitarTypes[keyof typeof GuitarTypes];

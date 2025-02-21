@@ -6,6 +6,7 @@ import {
   UseGuards,
   Req,
   Get,
+  Logger,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -18,9 +19,11 @@ import { RequestWithTokenPayload } from 'src/core/interfaces/request-with-token-
 @Controller('users')
 @ApiTags('Пользователи')
 export class UserController {
+  private readonly logger = new Logger(UserController.name);
+
   constructor(
     private readonly usersService: UserService,
-    private readonly mailService: MailService
+    private readonly mailService: MailService,
   ) { }
 
   @Post()
@@ -28,10 +31,11 @@ export class UserController {
   public async create(@Body() createUserDto: CreateUserDto) {
     const user = await this.usersService.create(createUserDto);
     try {
-      await this.mailService.sendNotifyNewSubscriber(createUserDto);
-    } finally {
-      return user;
+      this.mailService.sendNotifyNewSubscriber(createUserDto);
+    } catch (error) {
+      this.logger.error('[Send email error]:' + error.message);
     }
+    return user;
   }
 
   @ApiOperation({ summary: 'Авторизация пользователя.' })

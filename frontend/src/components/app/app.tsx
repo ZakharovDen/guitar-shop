@@ -18,7 +18,11 @@ function App(): JSX.Element {
           path={AppRoute.Main}
           element={<Layout />}
         >
-          <Route index element={<LoginScreen />} />
+          <Route index element={
+            <PrivateRoute restrictedFor={AuthorizationStatus.Auth} redirectTo={AppRoute.ProductList}>
+              <LoginScreen />
+            </PrivateRoute>
+          } />
           <Route
             path={AppRoute.ProductAdd}
             element={
@@ -38,9 +42,9 @@ function App(): JSX.Element {
           <Route
             path={AppRoute.Registration}
             element={
-              //<PrivateRoute restrictedFor={AuthorizationStatus.Auth} redirectTo={AppRoute.ProductList}>
-              <RegistrationScreen />
-              //</PrivateRoute>
+              <PrivateRoute restrictedFor={AuthorizationStatus.Auth} redirectTo={AppRoute.ProductList}>
+                <RegistrationScreen />
+              </PrivateRoute>
             }
           />
           <Route

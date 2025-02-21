@@ -1,9 +1,13 @@
 type User = {
   id: string,
   name: string;
+  email: string;
 }
 
 export type UserData = User & {
-  email: string;
-  token: string;
+  accessToken: string;
 };
+
+export type UserAuth = Pick<User, 'email'> & { password: string };
+
+export type UserRegister = Pick<User, 'name'> & UserAuth;

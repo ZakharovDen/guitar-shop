@@ -1,6 +1,8 @@
 import { FormEvent, useRef } from "react";
 import { useAppDispatch } from "../../hooks";
 import { loginAction } from "../../store/user/thunks";
+import { Link } from "react-router-dom";
+import { AppRoute } from "../../constant";
 
 function LoginScreen(): JSX.Element {
   const loginRef = useRef<HTMLInputElement | null>(null);
@@ -22,7 +24,8 @@ function LoginScreen(): JSX.Element {
       <div className="container">
         <section className="login">
           <h1 className="login__title">Войти</h1>
-          <p className="login__text">Hовый пользователь? <a className="login__link" href="registration.html">Зарегистрируйтесь</a> прямо сейчас</p>
+          <p className="login__text">Hовый пользователь?
+            <Link className="login__link" to={AppRoute.Registration}>Зарегистрируйтесь</Link> прямо сейчас</p>
           <form method="post" action="/" onSubmit={handleSubmit}>
             <div className="input-login">
               <label htmlFor="email">Введите e-mail</label>

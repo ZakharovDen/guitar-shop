@@ -1,10 +1,27 @@
+import { FormEvent } from "react";
+import { useAppDispatch } from "../../hooks";
+import { UserRegister } from "../../types/user";
+import { registerAction } from "../../store/user/thunks";
+
 function RegistrationScreen(): JSX.Element {
+  const dispatch = useAppDispatch();
+
+  const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+
+    const formData = new FormData(form) as Iterable<[UserRegister]>;
+    const data = Object.fromEntries(formData);
+
+    dispatch(registerAction(data));
+  };
+
   return (
     <main className="page-content">
       <div className="container">
         <section className="login">
           <h1 className="login__title">Регистрация</h1>
-          <form method="post" action="/">
+          <form method="post" action="/" onSubmit={handleFormSubmit}>
             <div className="input-login">
               <label htmlFor="name">Введите имя</label>
               <input type="text" id="name" name="name" autoComplete="off" required></input>

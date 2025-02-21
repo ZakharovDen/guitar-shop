@@ -50,7 +50,6 @@ export class ProductController {
   @ApiOperation({ summary: 'Получение списка товаров' })
   @ApiBearerAuth()
   @SerializeOptions({ type: ProductWithPaginationRdo })
-  //@UseGuards(JwtAuthGuard)
   public async findAll(@Query() query: ProductQuery) {
     return this.productsService.findAll(query);
   }
@@ -58,6 +57,7 @@ export class ProductController {
   @Get(':id')
   @ApiOperation({ summary: 'Получение детальной информации по товару' })
   @SerializeOptions({ type: ProductRdo })
+  @UseGuards(JwtAuthGuard)
   public async findOne(@Param('id') id: string) {
     return this.productsService.findOne(id);
   }
