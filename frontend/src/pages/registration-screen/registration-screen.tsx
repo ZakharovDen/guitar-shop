@@ -6,9 +6,9 @@ import { registerAction } from "../../store/user/thunks";
 function RegistrationScreen(): JSX.Element {
   const dispatch = useAppDispatch();
 
-  const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const form = e.currentTarget;
+  const handleFormSubmit = (evt: FormEvent<HTMLFormElement>) => {
+    evt.preventDefault();
+    const form = evt.currentTarget;
 
     const formData = new FormData(form) as Iterable<[UserRegister]>;
     const data = Object.fromEntries(formData);

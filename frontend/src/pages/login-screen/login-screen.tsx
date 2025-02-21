@@ -3,21 +3,21 @@ import { useAppDispatch } from "../../hooks";
 import { loginAction } from "../../store/user/thunks";
 import { Link } from "react-router-dom";
 import { AppRoute } from "../../constant";
+import { UserAuth } from "../../types/user";
 
 function LoginScreen(): JSX.Element {
   const loginRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
   const dispatch = useAppDispatch();
 
-  const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
+  const handleFormSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
+    const form = evt.currentTarget;
 
-    if (loginRef.current !== null && passwordRef.current !== null) {
-      dispatch(loginAction({
-        login: loginRef.current.value,
-        password: passwordRef.current.value
-      }));
-    }
+    const formData = new FormData(form) as Iterable<[UserAuth]>;
+    const data = Object.fromEntries(formData);
+    console.dir(data);
+    dispatch(loginAction(data));
   };
   return (
     <main className="page-content">
@@ -26,7 +26,7 @@ function LoginScreen(): JSX.Element {
           <h1 className="login__title">Войти</h1>
           <p className="login__text">Hовый пользователь?
             <Link className="login__link" to={AppRoute.Registration}>Зарегистрируйтесь</Link> прямо сейчас</p>
-          <form method="post" action="/" onSubmit={handleSubmit}>
+          <form method="post" action="/" onSubmit={handleFormSubmit}>
             <div className="input-login">
               <label htmlFor="email">Введите e-mail</label>
               <input

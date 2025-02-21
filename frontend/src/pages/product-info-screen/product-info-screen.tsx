@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { AppRoute } from "../../constant";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { useEffect } from "react";
@@ -6,6 +6,7 @@ import { getProductAction } from "../../store/products/thunks";
 import { getProductInfo, getProductsDataLoadingStatus } from "../../store/products/selectors";
 import Spinner from "../../components/spinner/spinner";
 import ErrorScreen from "../error-screen/error-screen";
+import Breadcrumbs from "../../components/breadcrumbs/breadcrumbs";
 
 function ProductInfoScreen(): JSX.Element {
   const params = useParams();
@@ -28,21 +29,26 @@ function ProductInfoScreen(): JSX.Element {
     return <ErrorScreen />
   }
 
+  const breadcrumbs = [
+    {
+      label: 'Вход',
+      path: AppRoute.Main
+    },
+    {
+      label: 'Товары',
+      path: AppRoute.ProductList
+    },
+    {
+      label: 'Товар',
+      path: AppRoute.ProductInfo.replace(':id', product.id)
+    },
+  ];
+
   return (
     <main className="page-content">
       <div className="container">
         <h1 className="page-content__title title title--bigger">Товар</h1>
-        <ul className="breadcrumbs page-content__breadcrumbs">
-          <li className="breadcrumbs__item" key={1}>
-            <Link className="link" to={AppRoute.Main}>Главная</Link>
-          </li>
-          <li className="breadcrumbs__item" key={2}>
-            <Link className="link" to={AppRoute.ProductList}>Каталог</Link>
-          </li>
-          <li className="breadcrumbs__item" key={3}>
-            <Link className="link" to={AppRoute.ProductInfo}>Товар</Link>
-          </li>
-        </ul>
+        <Breadcrumbs breadcrumbs={breadcrumbs} contentClass={true} />
         <section className="product-container"><img className="product-container__img" src={product?.photoPath} srcSet={product?.photoPath} width="90" height="235" alt=""></img>
           <div className="product-container__info-wrapper">
             <h2 className="product-container__title title title--big title--uppercase">{product?.title}</h2>

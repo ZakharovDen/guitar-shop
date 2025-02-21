@@ -4,22 +4,28 @@ import Filter from "../../components/filter/filter";
 import { useAppSelector } from "../../hooks";
 import { getProducts } from "../../store/products/selectors";
 import { AppRoute } from "../../constant";
+import Breadcrumbs from "../../components/breadcrumbs/breadcrumbs";
 
 function ProductListScreen(): JSX.Element {
   const products = useAppSelector(getProducts);
   const navigate = useNavigate();
+  const breadcrumbs = [
+    {
+      label: 'Вход',
+      path: AppRoute.Main
+    },
+    {
+      label: 'Товары',
+      path: AppRoute.ProductList
+    },
+  ];
 
   return (
     <main className="page-content">
       <section className="product-list">
         <div className="container">
           <h1 className="product-list__title">Список товаров</h1>
-          <ul className="breadcrumbs">
-            <li className="breadcrumbs__item"><a className="link" href="./main.html">Вход</a>
-            </li>
-            <li className="breadcrumbs__item"><a className="link">Товары</a>
-            </li>
-          </ul>
+          <Breadcrumbs breadcrumbs={breadcrumbs} />
           <div className="catalog">
             <Filter />
             <div className="catalog-sort">

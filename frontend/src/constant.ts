@@ -8,6 +8,17 @@ export enum AppRoute {
   Error = '/error',
 }
 
+export const AppRouteNew = {
+  Main: { path: '/', label: 'Вход' },
+  Registration: { path: '/registration', label: 'Регистрация' },
+  ProductList: { path: '/products', label: 'Товары' },
+  ProductInfo: { path: '/products/:id', label: 'Товар' },
+  ProductAdd: { path: '/products/add', label: 'Новый товар' },
+  ProductEdit: { path: '/products/:id/edit', label: 'Добавить название товара!!!' },
+  Error: { path: '/error', label: 'Страница не найдена' },
+}
+
+
 export enum AuthorizationStatus {
   Auth = 'AUTH',
   NoAuth = 'NO_AUTH',
