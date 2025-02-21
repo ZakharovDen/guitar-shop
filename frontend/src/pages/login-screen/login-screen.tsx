@@ -16,7 +16,6 @@ function LoginScreen(): JSX.Element {
 
     const formData = new FormData(form) as Iterable<[UserAuth]>;
     const data = Object.fromEntries(formData);
-    console.dir(data);
     dispatch(loginAction(data));
   };
   return (

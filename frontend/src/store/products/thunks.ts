@@ -40,3 +40,15 @@ export const deleteProductAction = createAsyncThunk<string, string, {
     return id;
   },
 );
+
+export const postProductAction = createAsyncThunk<Product, FormData, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance;
+}>(
+  'data/postProduct',
+  async (formData, { extra: api }) => {
+    const { data } = await api.post<Product>(`${APIRoute.Products}`, formData);
+    return data;
+  },
+);

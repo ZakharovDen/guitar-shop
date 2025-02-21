@@ -26,6 +26,7 @@ export class ProductController {
   @UseInterceptors(FileInterceptor('photo'))
   @ApiConsumes('multipart/form-data')
   @SerializeOptions({ type: ProductRdo })
+  @UseGuards(JwtAuthGuard)
   public async create(
     @Body() dto: CreateProductDto,
     @UploadedFile(
@@ -67,6 +68,7 @@ export class ProductController {
   @UseInterceptors(FileInterceptor('photo'))
   @ApiConsumes('multipart/form-data')
   @SerializeOptions({ type: ProductRdo })
+  @UseGuards(JwtAuthGuard)
   public async update(
     @Param('id') id: string,
     @Body() dto: UpdateProductDto,
@@ -90,6 +92,7 @@ export class ProductController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Удаление товара' })
+  @UseGuards(JwtAuthGuard)
   public async remove(@Param('id') id: string) {
     return this.productsService.remove(id);
   }

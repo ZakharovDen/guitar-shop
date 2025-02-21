@@ -10,4 +10,6 @@ export type Product = {
   price: number;
 }
 
+export type NewProduct = Omit<Product, 'id' | 'photoPath'> & { photo?: File };
+
 export type Products = Product[];

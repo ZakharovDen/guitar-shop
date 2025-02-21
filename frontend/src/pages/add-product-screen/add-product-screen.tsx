@@ -1,8 +1,11 @@
 import Breadcrumbs from "../../components/breadcrumbs/breadcrumbs";
 import ProductForm from "../../components/product-form/product-form";
 import { AppRoute } from "../../constant";
+import { useAppDispatch } from "../../hooks";
+import { postProductAction } from "../../store/products/thunks";
 
 function AddProductScreen(): JSX.Element {
+  const dispatch = useAppDispatch();
   const breadcrumbs = [
     {
       label: 'Вход',
@@ -18,13 +21,27 @@ function AddProductScreen(): JSX.Element {
     },
   ];
 
+  const emptyProduct = {
+    title: '',
+    description: '',
+    createdAt: new Date(),
+    type: '',
+    article: '',
+    stringsCount: 0,
+    price: 0
+  }
+
+  const handleFormSubmit = (formData: FormData) => {
+    dispatch(postProductAction(formData));
+  };
+
   return (
     <main className="page-content">
       <section className="add-item">
         <div className="container">
           <h1 className="add-item__title">Новый товар</h1>
           <Breadcrumbs breadcrumbs={breadcrumbs} />
-          <ProductForm />
+          <ProductForm onSubmit={handleFormSubmit} product={emptyProduct} />
         </div>
       </section>
     </main>
