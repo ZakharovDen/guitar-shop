@@ -29,4 +29,14 @@ export const getProductAction = createAsyncThunk<Product, string | undefined, {
   },
 );
 
-
+export const deleteProductAction = createAsyncThunk<string, string, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance;
+}>(
+  'data/deleteProduct',
+  async (id, { extra: api }) => {
+    await api.delete<void>(`${APIRoute.Products}/${id}`);
+    return id;
+  },
+);

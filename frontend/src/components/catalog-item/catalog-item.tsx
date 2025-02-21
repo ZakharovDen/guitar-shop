@@ -1,14 +1,20 @@
 import { Link } from "react-router-dom";
 import { Product } from "../../types/product";
 import { AppRoute } from "../../constant";
+import { deleteProductAction } from "../../store/products/thunks";
+import { useAppDispatch } from "../../hooks";
 
 type CatalogItemProps = {
   product: Product;
 }
 
 function CatalogItem({ product }: CatalogItemProps): JSX.Element {
+  const dispatch = useAppDispatch();
   const linkToInfo = AppRoute.ProductInfo.replace(':id', product.id);
   const linkToEdit = AppRoute.ProductEdit.replace(':id', product.id);
+  const handleButtonClick = () => {
+    dispatch(deleteProductAction(product.id));
+  };
   return (
     <li className="catalog-item">
       <div className="catalog-item__data">
@@ -36,7 +42,12 @@ function CatalogItem({ product }: CatalogItemProps): JSX.Element {
         >
           Редактировать
         </Link>
-        <button className="button button--small button--black-border" type="submit" aria-label="Удалить товар">
+        <button
+          className="button button--small button--black-border"
+          type="submit"
+          aria-label="Удалить товар"
+          onClick={handleButtonClick}
+        >
           Удалить
         </button>
       </div>

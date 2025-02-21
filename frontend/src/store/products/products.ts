@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { Product, Products } from "../../types/product";
 import { NameSpace } from "../const";
-import { fetchProductsAction, getProductAction } from "./thunks";
+import { deleteProductAction, fetchProductsAction, getProductAction } from "./thunks";
 
 export type InitialState = {
   products: Products;
@@ -44,6 +44,18 @@ export const products = createSlice({
         state.isProductsDataLoading = false;
       })
       .addCase(getProductAction.rejected, (state) => {
+        state.isProductsDataLoading = false;
+        state.hasError = true;
+      })
+      .addCase(deleteProductAction.pending, (state) => {
+        state.isProductsDataLoading = true;
+        state.hasError = false;
+      })
+      .addCase(deleteProductAction.fulfilled, (state, action) => {
+        state.products = state.products.filter((product) => product.id !== action.payload);
+        state.isProductsDataLoading = false;
+      })
+      .addCase(deleteProductAction.rejected, (state) => {
         state.isProductsDataLoading = false;
         state.hasError = true;
       })
