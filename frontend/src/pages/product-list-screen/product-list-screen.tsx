@@ -7,6 +7,8 @@ import { AppRoute } from "../../constant";
 import Breadcrumbs from "../../components/breadcrumbs/breadcrumbs";
 import { useEffect, useState } from "react";
 import { fetchProductsAction } from "../../store/products/thunks";
+import Pagination from "../../components/pagination/pagination";
+import { QueryParams } from "../../types/query-params";
 
 const breadcrumbs = [
   {
@@ -18,25 +20,20 @@ const breadcrumbs = [
     path: AppRoute.ProductList
   },
 ];
-interface QueryParams {
-  sortBy: string;
-  sortOrder: 'asc' | 'desc';
-  category: string;
-  page: number;
-}
 
 function ProductListScreen(): JSX.Element {
   const dispatch = useAppDispatch();
   const { entities, currentPage, itemsPerPage, totalItems, totalPages } = useAppSelector(getProducts);
   const navigate = useNavigate();
 
-  const [sortBy, setSortBy] = useState<string>('name');
+  const [sortBy, setSortBy] = useState<string>('createDate');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [filterCategory, setFilterCategory] = useState<string>('all');
   const [page, setPage] = useState<number>(1);
+
   // Объект с параметрами запроса, который будет передаваться в asyncThunk
   const [queryParams, setQueryParams] = useState<QueryParams>({
-    sortBy: 'name',
+    sortBy: 'createDate',
     sortOrder: 'asc',
     category: 'all',
     page: 1,
@@ -47,22 +44,29 @@ function ProductListScreen(): JSX.Element {
 
   const handleSortByChange = (newSortBy: string) => {
     setSortBy(newSortBy);
-    // Обновляем параметры запроса. Сортировку и фильтрацию применяем на бэке.
     setQueryParams(prev => ({
       ...prev,
       sortBy: newSortBy,
-      sortOrder: prev.sortBy === newSortBy ? (prev.sortOrder === 'asc' ? 'desc' : 'asc') : 'asc', //Переключаем порядок, если нажата та же кнопка.
-      page: 1 //При смене сортировки возвращаемся на первую страницу
+      //sortOrder: prev.sortBy === newSortBy ? (prev.sortOrder === 'asc' ? 'desc' : 'asc') : 'asc',
+      page: 1
+    }));
+  };
+
+  const handleSortOrderChange = (newSortOrder: 'asc' | 'desc') => {
+    setSortOrder(newSortOrder);
+    setQueryParams(prev => ({
+      ...prev,
+      sortOrder: newSortOrder,
+      page: 1
     }));
   };
 
   const handleFilterCategoryChange = (newCategory: string) => {
     setFilterCategory(newCategory);
-    // Обновляем параметры запроса
     setQueryParams(prev => ({
       ...prev,
       category: newCategory,
-      page: 1 //При смене фильтра возвращаемся на первую страницу
+      page: 1
     }));
   };
 
@@ -73,17 +77,6 @@ function ProductListScreen(): JSX.Element {
       page: newPage
     }));
   }
-
-  //Генерируем массив номеров страниц для отображения
-  const getPageNumbers = () => {
-    const pages = [];
-    for (let i = 1; i <= totalPages; i++) {
-      pages.push(i);
-    }
-    return pages;
-  };
-
-  const pageNumbers = getPageNumbers();
 
   return (
     <main className="page-content">
@@ -97,22 +90,26 @@ function ProductListScreen(): JSX.Element {
               <h2 className="catalog-sort__title">Сортировать:</h2>
               <div className="catalog-sort__type">
                 <button
-                  className="catalog-sort__type-button catalog-sort__type-button--active"
-                  aria-label="по цене"
+                  className={`catalog-sort__type-button ${(sortBy === 'createDate') ? 'catalog-sort__type-button--active' : ''}`}
+                  aria-label="по дате"
+                  onClick={() => handleSortByChange('createDate')}
                 >по дате</button>
                 <button
-                  className="catalog-sort__type-button"
+                  className={`catalog-sort__type-button ${(sortBy === 'price') ? 'catalog-sort__type-button--active' : ''}`}
                   aria-label="по цене"
+                  onClick={() => handleSortByChange('price')}
                 >по цене</button>
               </div>
               <div className="catalog-sort__order">
                 <button
-                  className="catalog-sort__order-button catalog-sort__order-button--up"
+                  className={`catalog-sort__order-button catalog-sort__order-button--up ${(sortOrder === 'asc') ? 'catalog-sort__order-button--active' : ''}`}
                   aria-label="По возрастанию"
+                  onClick={() => handleSortOrderChange('asc')}
                 ></button>
                 <button
-                  className="catalog-sort__order-button catalog-sort__order-button--down catalog-sort__order-button--active"
+                  className={`catalog-sort__order-button catalog-sort__order-button--down ${(sortOrder === 'desc') ? 'catalog-sort__order-button--active' : ''}`}
                   aria-label="По убыванию"
+                  onClick={() => handleSortOrderChange('desc')}
                 ></button>
               </div>
             </div>
@@ -123,41 +120,7 @@ function ProductListScreen(): JSX.Element {
             onClick={() => { navigate(AppRoute.ProductAdd) }}
           >Добавить новый товар
           </button>
-          <div className="pagination product-list__pagination">
-            <ul className="pagination__list">
-              {pageNumbers.map(pageNumber => (
-                <li
-                  key={pageNumber}
-                  className={`pagination__page ${page === pageNumber ? 'pagination__page--active' : ''}`}
-                >
-                  <a
-                    className="link pagination__page-link"
-                    href={`#${pageNumber}`} //Использовать react-router link вместо <a>, если используете роутинг.
-                    onClick={(e) => {
-                      e.preventDefault(); // Предотвращаем переход по ссылке
-                      handlePageChange(pageNumber);
-                    }}
-                  >
-                    {pageNumber}
-                  </a>
-                </li>
-              ))}
-              <li className="pagination__page pagination__page--next" id="next">
-                <a
-                  className="link pagination__page-link"
-                  href={`#${page + 1}`}  //Использовать react-router link вместо <a>, если используете роутинг.
-                  onClick={(e) => {
-                    e.preventDefault(); // Предотвращаем переход по ссылке
-                    if (page < totalPages) {
-                      handlePageChange(page + 1);
-                    }
-                  }}
-                >
-                  Далее
-                </a>
-              </li>
-            </ul>
-          </div>
+          <Pagination totalPages={totalPages} currentPage={page} onPageChange={handlePageChange} />
         </div>
       </section>
     </main>

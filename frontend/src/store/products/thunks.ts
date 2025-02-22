@@ -4,6 +4,7 @@ import { AppDispatch, State } from '../../types/state';
 import { APIRoute } from '../const';
 import { Product, Products } from '../../types/product';
 import { ProductsWithPagination } from '../../types/products-with-pagination';
+import { QueryParams } from '../../types/query-params';
 
 // export const fetchProductsAction = createAsyncThunk<Products, any, {
 //   dispatch: AppDispatch;
@@ -27,12 +28,18 @@ export const fetchProductsAction = createAsyncThunk<ProductsWithPagination, any,
   extra: AxiosInstance;
 }>(
   'data/fetchProducts',
-  async (query: any, { extra: api }) => {
+  async (query: QueryParams, { extra: api }) => {
     let queryParams = '';
     if (query?.page) {
-      queryParams = `?page=${query.page}`;
+      queryParams = queryParams ? `${queryParams}&page=${query.page}` : `page=${query.page}`;
     }
-    const result = await api.get<ProductsWithPagination>(`${APIRoute.Products}${queryParams}`);
+    if (query?.sortBy) {
+      queryParams = queryParams ? `${queryParams}&sortField=${query.sortBy}` : `sortField=${query.sortBy}`;
+    }
+    if (query?.sortOrder) {
+      queryParams = queryParams ? `${queryParams}&sortDirection=${query.sortOrder}` : `sortDirection=${query.sortOrder}`;
+    }
+    const result = await api.get<ProductsWithPagination>(`${APIRoute.Products}${queryParams ? `?${queryParams}` : ''}`);
     return result.data;
   },
 );
