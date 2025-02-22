@@ -17,4 +17,4 @@ export const store = configureStore({
 });
 
 store.dispatch(checkAuthAction());
-store.dispatch(fetchProductsAction());
+store.dispatch(fetchProductsAction(undefined));

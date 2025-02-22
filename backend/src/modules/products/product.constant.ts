@@ -48,8 +48,8 @@ export enum SortDirection {
 }
 
 export enum SortField {
-  CreateDate = 'Дата добавления',
-  Price = 'Цена',
+  CreateDate = 'CreateDate',
+  Price = 'Price',
 };
 
 export const DEFAULT_ITEM_COUNT_LIMIT = 7;

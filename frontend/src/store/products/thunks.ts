@@ -5,15 +5,35 @@ import { APIRoute } from '../const';
 import { Product, Products } from '../../types/product';
 import { ProductsWithPagination } from '../../types/products-with-pagination';
 
-export const fetchProductsAction = createAsyncThunk<Products, undefined, {
+// export const fetchProductsAction = createAsyncThunk<Products, any, {
+//   dispatch: AppDispatch;
+//   state: State;
+//   extra: AxiosInstance;
+// }>(
+//   'data/fetchProducts',
+//   async (query: any, { extra: api }) => {
+//     let queryParams = '';
+//     if (query?.page) {
+//       queryParams = `?page=${query.page}`;
+//     }
+//     const result = await api.get<ProductsWithPagination>(`${APIRoute.Products}${queryParams}`);
+//     return result.data.entities;
+//   },
+// );
+
+export const fetchProductsAction = createAsyncThunk<ProductsWithPagination, any, {
   dispatch: AppDispatch;
   state: State;
   extra: AxiosInstance;
 }>(
   'data/fetchProducts',
-  async (_arg, { extra: api }) => {
-    const result = await api.get<ProductsWithPagination>(APIRoute.Products);
-    return result.data.entities;
+  async (query: any, { extra: api }) => {
+    let queryParams = '';
+    if (query?.page) {
+      queryParams = `?page=${query.page}`;
+    }
+    const result = await api.get<ProductsWithPagination>(`${APIRoute.Products}${queryParams}`);
+    return result.data;
   },
 );
 

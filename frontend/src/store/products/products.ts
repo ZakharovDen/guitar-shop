@@ -1,17 +1,24 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Product, Products } from "../../types/product";
+import { Product } from "../../types/product";
 import { NameSpace } from "../const";
 import { deleteProductAction, fetchProductsAction, getProductAction, postProductAction } from "./thunks";
+import { ProductsWithPagination } from "../../types/products-with-pagination";
 
 export type InitialState = {
-  products: Products;
+  products: ProductsWithPagination;
   productInfo: Product | undefined;
   isProductsDataLoading: boolean;
   hasError: boolean;
 };
 
 const initialState: InitialState = {
-  products: [],
+  products: {
+    currentPage: 1,
+    entities: [],
+    itemsPerPage: 7,
+    totalItems: 0,
+    totalPages: 0
+  },
   productInfo: undefined,
   isProductsDataLoading: false,
   hasError: false,
@@ -52,7 +59,7 @@ export const products = createSlice({
         state.hasError = false;
       })
       .addCase(deleteProductAction.fulfilled, (state, action) => {
-        state.products = state.products.filter((product) => product.id !== action.payload);
+        state.products.entities = state.products.entities.filter((product) => product.id !== action.payload);
         state.isProductsDataLoading = false;
       })
       .addCase(deleteProductAction.rejected, (state) => {
@@ -64,7 +71,7 @@ export const products = createSlice({
         state.hasError = false;
       })
       .addCase(postProductAction.fulfilled, (state, action) => {
-        state.products.push(action.payload);
+        state.products.entities.push(action.payload);
         state.isProductsDataLoading = false;
       })
       .addCase(postProductAction.rejected, (state) => {
