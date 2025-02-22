@@ -28,18 +28,23 @@ export const fetchProductsAction = createAsyncThunk<ProductsWithPagination, any,
   extra: AxiosInstance;
 }>(
   'data/fetchProducts',
-  async (query: QueryParams, { extra: api }) => {
-    let queryParams = '';
-    if (query?.page) {
-      queryParams = queryParams ? `${queryParams}&page=${query.page}` : `page=${query.page}`;
+  async ({ page, sortBy, sortOrder, guitarStringsCount, guitarTypes }: QueryParams, { extra: api }) => {
+    let query = '';
+    if (page) {
+      query += `&page=${page}`;
     }
-    if (query?.sortBy) {
-      queryParams = queryParams ? `${queryParams}&sortField=${query.sortBy}` : `sortField=${query.sortBy}`;
+    if (sortBy) {
+      query += `&sortField=${sortBy}`;
     }
-    if (query?.sortOrder) {
-      queryParams = queryParams ? `${queryParams}&sortDirection=${query.sortOrder}` : `sortDirection=${query.sortOrder}`;
+    if (sortOrder) {
+      query += `&sortDirection=${sortOrder}`;
     }
-    const result = await api.get<ProductsWithPagination>(`${APIRoute.Products}${queryParams ? `?${queryParams}` : ''}`);
+    if (guitarTypes) {
+      for (const type of guitarTypes) {
+        query += `&guitarType=${type}`;
+      }
+    }
+    const result = await api.get<ProductsWithPagination>(`${APIRoute.Products}?${query}`);
     return result.data;
   },
 );

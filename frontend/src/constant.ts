@@ -48,6 +48,8 @@ export const GuitarStrings = [
   },
 ] as const;
 
+export type GuitarString = typeof GuitarStrings[keyof typeof GuitarStrings];
+
 export const GuitarTypes = [
   {
     id: 'electro',
@@ -66,4 +68,6 @@ export const GuitarTypes = [
   },
 ] as const;
 
-export type GuitarType = typeof GuitarTypes[keyof typeof GuitarTypes];
+export type GuitarType = typeof GuitarTypes[number];
+
+export type GuitarTypeId = GuitarType['id'];

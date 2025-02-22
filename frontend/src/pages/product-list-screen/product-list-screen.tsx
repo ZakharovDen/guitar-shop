@@ -3,7 +3,7 @@ import Catalog from "../../components/catalog/catalog";
 import Filter from "../../components/filter/filter";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { getProducts } from "../../store/products/selectors";
-import { AppRoute } from "../../constant";
+import { AppRoute, GuitarType, GuitarTypeId } from "../../constant";
 import Breadcrumbs from "../../components/breadcrumbs/breadcrumbs";
 import { useEffect, useState } from "react";
 import { fetchProductsAction } from "../../store/products/thunks";
@@ -31,13 +31,14 @@ function ProductListScreen(): JSX.Element {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [filterCategory, setFilterCategory] = useState<string>('');
   const [page, setPage] = useState<number>(1);
+  const [selectedGuitarTypes, setSelectedGuitarTypes] = useState<GuitarTypeId[]>([])
 
-  // Объект с параметрами запроса, который будет передаваться в asyncThunk
   const [queryParams, setQueryParams] = useState<QueryParams>({
     sortBy: 'createDate',
     sortOrder: 'asc',
-    category: '',
     page: 1,
+    guitarStringsCount: undefined,
+    guitarTypes: undefined
   });
   useEffect(() => {
     dispatch(fetchProductsAction(queryParams));
@@ -61,12 +62,12 @@ function ProductListScreen(): JSX.Element {
     }));
   };
 
-  const handleFilterCategoryChange = (newCategory: string) => {
-    setFilterCategory(newCategory);
+  const handleGuitarTypeFilterChange = (newSelectedTypes: GuitarTypeId[]) => {
+    setSelectedGuitarTypes(newSelectedTypes);
+    setPage(1);
     setQueryParams(prev => ({
       ...prev,
-      category: newCategory,
-      page: 1
+      guitarTypes: newSelectedTypes
     }));
   };
 
@@ -85,7 +86,7 @@ function ProductListScreen(): JSX.Element {
           <h1 className="product-list__title">Список товаров</h1>
           <Breadcrumbs breadcrumbs={breadcrumbs} />
           <div className="catalog">
-            <Filter />
+            <Filter onTypeChange={handleGuitarTypeFilterChange} selectedTypes={selectedGuitarTypes} />
             <CatalogSort
               currentSortBy={sortBy}
               currentSortOrder={sortOrder}
