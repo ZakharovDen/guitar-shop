@@ -1,5 +1,6 @@
 import { GuitarStringsCount } from "src/core/types/product/guitar-strings-count";
 import { GuitarType } from "src/core/types/product/guitar-type";
+import { getImages } from "src/helpers/mocks/images";
 import { getArticles, getDescriptions, getTitles } from "src/helpers/mocks/product";
 
 enum Price {
@@ -30,7 +31,7 @@ export class ProductGenerator {
       article: this.getRandomItem<string>(getArticles()),
       createdAt: this.generateRandomDate(),
       description: this.getRandomItem<string>(getDescriptions()),
-      photoPath: '',
+      photoPath: this.getRandomItem<string>(getImages()),
       price: this.generateRandomValue(Price.Min, Price.Max),
       stringsCount: this.getRandomItem<number>(Object.values(GuitarStringsCount)),
       type: this.getRandomItem<string>(Object.values(GuitarType)),
