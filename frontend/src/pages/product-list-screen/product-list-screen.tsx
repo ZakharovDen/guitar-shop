@@ -3,7 +3,7 @@ import Catalog from "../../components/catalog/catalog";
 import Filter from "../../components/filter/filter";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { getProducts } from "../../store/products/selectors";
-import { AppRoute, GuitarType, GuitarTypeId } from "../../constant";
+import { AppRoute, GuitarStringId, GuitarTypeId } from "../../constant";
 import Breadcrumbs from "../../components/breadcrumbs/breadcrumbs";
 import { useEffect, useState } from "react";
 import { fetchProductsAction } from "../../store/products/thunks";
@@ -24,20 +24,20 @@ const breadcrumbs = [
 
 function ProductListScreen(): JSX.Element {
   const dispatch = useAppDispatch();
-  const { entities, currentPage, itemsPerPage, totalItems, totalPages } = useAppSelector(getProducts);
+  const { entities, totalPages } = useAppSelector(getProducts);
   const navigate = useNavigate();
 
   const [sortBy, setSortBy] = useState<string>('createDate');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
-  const [filterCategory, setFilterCategory] = useState<string>('');
   const [page, setPage] = useState<number>(1);
   const [selectedGuitarTypes, setSelectedGuitarTypes] = useState<GuitarTypeId[]>([])
+  const [selectedGuitarStrings, setSelectedGuitarStrings] = useState<GuitarStringId[]>([])
 
   const [queryParams, setQueryParams] = useState<QueryParams>({
     sortBy: 'createDate',
     sortOrder: 'asc',
     page: 1,
-    guitarStringsCount: undefined,
+    guitarStrings: undefined,
     guitarTypes: undefined
   });
   useEffect(() => {
@@ -71,6 +71,15 @@ function ProductListScreen(): JSX.Element {
     }));
   };
 
+  const handleGuitarStringsFilterChange = (newSelectedStrings: GuitarStringId[]) => {
+    setSelectedGuitarStrings(newSelectedStrings);
+    setPage(1);
+    setQueryParams(prev => ({
+      ...prev,
+      guitarStrings: newSelectedStrings
+    }));
+  };
+
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
     setQueryParams(prev => ({
@@ -86,7 +95,12 @@ function ProductListScreen(): JSX.Element {
           <h1 className="product-list__title">Список товаров</h1>
           <Breadcrumbs breadcrumbs={breadcrumbs} />
           <div className="catalog">
-            <Filter onTypeChange={handleGuitarTypeFilterChange} selectedTypes={selectedGuitarTypes} />
+            <Filter
+              onTypeChange={handleGuitarTypeFilterChange}
+              selectedTypes={selectedGuitarTypes}
+              onStringsChange={handleGuitarStringsFilterChange}
+              selectedStrings={selectedGuitarStrings}
+            />
             <CatalogSort
               currentSortBy={sortBy}
               currentSortOrder={sortOrder}

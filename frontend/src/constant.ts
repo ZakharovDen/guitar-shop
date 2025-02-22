@@ -27,28 +27,30 @@ export enum AuthorizationStatus {
 
 export const GuitarStrings = [
   {
-    id: '4-strings',
+    id: '4',
     name: '4-strings',
     label: 4,
   },
   {
-    id: '6-strings',
+    id: '6',
     name: '6-strings',
     label: 6,
   },
   {
-    id: '7-strings',
+    id: '7',
     name: '7-strings',
     label: 7,
   },
   {
-    id: '12-strings',
+    id: '12',
     name: '12-strings',
     label: 12,
   },
 ] as const;
 
-export type GuitarString = typeof GuitarStrings[keyof typeof GuitarStrings];
+export type GuitarString = typeof GuitarStrings[number];
+
+export type GuitarStringId = GuitarString['id'];
 
 export const GuitarTypes = [
   {

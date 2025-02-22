@@ -2,25 +2,9 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AxiosInstance } from 'axios';
 import { AppDispatch, State } from '../../types/state';
 import { APIRoute } from '../const';
-import { Product, Products } from '../../types/product';
+import { Product } from '../../types/product';
 import { ProductsWithPagination } from '../../types/products-with-pagination';
 import { QueryParams } from '../../types/query-params';
-
-// export const fetchProductsAction = createAsyncThunk<Products, any, {
-//   dispatch: AppDispatch;
-//   state: State;
-//   extra: AxiosInstance;
-// }>(
-//   'data/fetchProducts',
-//   async (query: any, { extra: api }) => {
-//     let queryParams = '';
-//     if (query?.page) {
-//       queryParams = `?page=${query.page}`;
-//     }
-//     const result = await api.get<ProductsWithPagination>(`${APIRoute.Products}${queryParams}`);
-//     return result.data.entities;
-//   },
-// );
 
 export const fetchProductsAction = createAsyncThunk<ProductsWithPagination, any, {
   dispatch: AppDispatch;
@@ -28,7 +12,7 @@ export const fetchProductsAction = createAsyncThunk<ProductsWithPagination, any,
   extra: AxiosInstance;
 }>(
   'data/fetchProducts',
-  async ({ page, sortBy, sortOrder, guitarStringsCount, guitarTypes }: QueryParams, { extra: api }) => {
+  async ({ page, sortBy, sortOrder, guitarStrings, guitarTypes }: QueryParams, { extra: api }) => {
     let query = '';
     if (page) {
       query += `&page=${page}`;
@@ -42,6 +26,11 @@ export const fetchProductsAction = createAsyncThunk<ProductsWithPagination, any,
     if (guitarTypes) {
       for (const type of guitarTypes) {
         query += `&guitarType=${type}`;
+      }
+    }
+    if (guitarStrings) {
+      for (const string of guitarStrings) {
+        query += `&guitarStringsCount=${string}`;
       }
     }
     const result = await api.get<ProductsWithPagination>(`${APIRoute.Products}?${query}`);

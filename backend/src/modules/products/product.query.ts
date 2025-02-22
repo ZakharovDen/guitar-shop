@@ -34,7 +34,12 @@ export class ProductQuery {
   public guitarType?: GuitarType[];
 
   @ApiProperty({ description: 'Количество струн', enum: GuitarStringsCount, required: false })
-  @Transform(({ value }) => +value)
+  @Transform(({ value }) => {
+    if (Array.isArray(value)) {
+      return value.map(item => Number(item));
+    }
+    return Number(value);
+  })
   @IsIn(Object.values(GuitarStringsCount), { each: true })
   @IsOptional()
   public guitarStringsCount?: GuitarStringsCount[];
