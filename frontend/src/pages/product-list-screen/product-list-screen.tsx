@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { fetchProductsAction } from "../../store/products/thunks";
 import Pagination from "../../components/pagination/pagination";
 import { QueryParams } from "../../types/query-params";
+import CatalogSort from "../../components/catalog-sort/catalog-sort";
 
 const breadcrumbs = [
   {
@@ -28,26 +29,25 @@ function ProductListScreen(): JSX.Element {
 
   const [sortBy, setSortBy] = useState<string>('createDate');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
-  const [filterCategory, setFilterCategory] = useState<string>('all');
+  const [filterCategory, setFilterCategory] = useState<string>('');
   const [page, setPage] = useState<number>(1);
 
   // Объект с параметрами запроса, который будет передаваться в asyncThunk
   const [queryParams, setQueryParams] = useState<QueryParams>({
     sortBy: 'createDate',
     sortOrder: 'asc',
-    category: 'all',
+    category: '',
     page: 1,
   });
   useEffect(() => {
-    dispatch(fetchProductsAction(queryParams)); // Вызываем action с параметрами запроса
-  }, [dispatch, queryParams]); // Зависимость от queryParams
+    dispatch(fetchProductsAction(queryParams));
+  }, [dispatch, queryParams]);
 
   const handleSortByChange = (newSortBy: string) => {
     setSortBy(newSortBy);
     setQueryParams(prev => ({
       ...prev,
       sortBy: newSortBy,
-      //sortOrder: prev.sortBy === newSortBy ? (prev.sortOrder === 'asc' ? 'desc' : 'asc') : 'asc',
       page: 1
     }));
   };
@@ -86,33 +86,12 @@ function ProductListScreen(): JSX.Element {
           <Breadcrumbs breadcrumbs={breadcrumbs} />
           <div className="catalog">
             <Filter />
-            <div className="catalog-sort">
-              <h2 className="catalog-sort__title">Сортировать:</h2>
-              <div className="catalog-sort__type">
-                <button
-                  className={`catalog-sort__type-button ${(sortBy === 'createDate') ? 'catalog-sort__type-button--active' : ''}`}
-                  aria-label="по дате"
-                  onClick={() => handleSortByChange('createDate')}
-                >по дате</button>
-                <button
-                  className={`catalog-sort__type-button ${(sortBy === 'price') ? 'catalog-sort__type-button--active' : ''}`}
-                  aria-label="по цене"
-                  onClick={() => handleSortByChange('price')}
-                >по цене</button>
-              </div>
-              <div className="catalog-sort__order">
-                <button
-                  className={`catalog-sort__order-button catalog-sort__order-button--up ${(sortOrder === 'asc') ? 'catalog-sort__order-button--active' : ''}`}
-                  aria-label="По возрастанию"
-                  onClick={() => handleSortOrderChange('asc')}
-                ></button>
-                <button
-                  className={`catalog-sort__order-button catalog-sort__order-button--down ${(sortOrder === 'desc') ? 'catalog-sort__order-button--active' : ''}`}
-                  aria-label="По убыванию"
-                  onClick={() => handleSortOrderChange('desc')}
-                ></button>
-              </div>
-            </div>
+            <CatalogSort
+              currentSortBy={sortBy}
+              currentSortOrder={sortOrder}
+              onSortByChange={handleSortByChange}
+              onSortOrderChange={handleSortOrderChange}
+            />
             <Catalog products={entities} />
           </div>
           <button
@@ -120,7 +99,11 @@ function ProductListScreen(): JSX.Element {
             onClick={() => { navigate(AppRoute.ProductAdd) }}
           >Добавить новый товар
           </button>
-          <Pagination totalPages={totalPages} currentPage={page} onPageChange={handlePageChange} />
+          <Pagination
+            totalPages={totalPages}
+            currentPage={page}
+            onPageChange={handlePageChange}
+          />
         </div>
       </section>
     </main>
