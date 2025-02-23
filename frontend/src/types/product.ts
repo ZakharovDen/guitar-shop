@@ -12,6 +12,8 @@ export type Product = {
   price: number;
 }
 
-export type NewProduct = Product & { photo?: File };
+type ProductWithoutId = Omit<Product, 'id'>;
+
+export type NewProduct = Partial<Pick<Product, 'id'>> & ProductWithoutId & { photo?: File };
 
 export type Products = Product[];

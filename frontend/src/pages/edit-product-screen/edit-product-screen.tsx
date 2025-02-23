@@ -20,7 +20,7 @@ function EditProductScreen(): JSX.Element {
     if (id) {
       dispatch(getProductAction(id));
     }
-  }, [params, dispatch]);
+  }, [params]);
 
   if (isProductLoading) {
     return <Spinner />;

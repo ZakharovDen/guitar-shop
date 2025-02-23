@@ -24,7 +24,9 @@ function ProductForm<T extends Product | NewProduct>({
     formData.append('type', String(formData.get('item-type')));
     formData.append('article', String(formData.get('sku')));
     formData.append('stringsCount', String(formData.get('string-qty')));
-    formData.append('id', product.id);
+    if (product.id) {
+      formData.append('id', product.id);
+    }
     formData.append('photoPath', product.photoPath);
     onSubmit(formData);
   };

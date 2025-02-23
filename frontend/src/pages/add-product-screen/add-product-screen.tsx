@@ -23,7 +23,6 @@ function AddProductScreen(): JSX.Element {
   ];
 
   const emptyProduct: NewProduct = {
-    id: '',
     title: '',
     description: '',
     createdAt: new Date(),
