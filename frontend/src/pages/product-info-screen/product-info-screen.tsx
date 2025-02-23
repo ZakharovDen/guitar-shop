@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { AppRoute } from "../../constant";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getProductAction } from "../../store/products/thunks";
 import { getProductInfo, getProductsDataLoadingStatus } from "../../store/products/selectors";
 import Spinner from "../../components/spinner/spinner";
@@ -13,6 +13,12 @@ function ProductInfoScreen(): JSX.Element {
   const dispatch = useAppDispatch();
   const product = useAppSelector(getProductInfo);
   const isProductLoading = useAppSelector(getProductsDataLoadingStatus);
+  const [activeTab, setActiveTab] = useState<'characteristics' | 'description'>('characteristics');
+
+  const handleTabClick = (tabId: 'characteristics' | 'description') => {
+    setActiveTab(tabId);
+  };
+
 
   useEffect(() => {
     const { id } = params;
@@ -54,9 +60,25 @@ function ProductInfoScreen(): JSX.Element {
             <h2 className="product-container__title title title--big title--uppercase">{product?.title}</h2>
             <br></br>
             <br></br>
-            <div className="tabs"><a className="button button--medium tabs__button" href="#characteristics">Характеристики</a><a className="button button--black-border button--medium tabs__button" href="#description">Описание</a>
+            <div className="tabs">
+              <a
+                className={`button button--medium tabs__button ${(activeTab === 'description') ? 'button--black-border' : ''}`}
+                href="#characteristics"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleTabClick('characteristics');
+                }}
+              >Характеристики</a>
+              <a
+                className={`button button--medium tabs__button ${(activeTab === 'characteristics') ? 'button--black-border' : ''}`}
+                href="#description"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleTabClick('description');
+                }}
+              >Описание</a>
               <div className="tabs__content" id="characteristics">
-                <table className="tabs__table">
+                <table className={`tabs__table ${(activeTab === 'description') ? 'hidden' : ''}`}>
                   <tbody>
                     <tr className="tabs__table-row">
                       <td className="tabs__title">Артикул:</td>
@@ -72,7 +94,9 @@ function ProductInfoScreen(): JSX.Element {
                     </tr>
                   </tbody>
                 </table>
-                <p className="tabs__product-description hidden">Гитара подходит как для старта обучения, так и для домашних занятий или использования в полевых условиях, например, в походах или для проведения уличных выступлений. Доступная стоимость, качество и надежная конструкция, а также приятный внешний вид, который сделает вас звездой вечеринки.</p>
+                <p className={`tabs__product-description ${(activeTab === 'characteristics') ? 'hidden' : ''}`}>
+                  {product.description}
+                </p>
               </div>
             </div>
           </div>
