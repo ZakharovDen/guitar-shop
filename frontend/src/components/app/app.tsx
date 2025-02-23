@@ -9,6 +9,7 @@ import Layout from '../layout/layout';
 import AddProductScreen from '../../pages/add-product-screen/add-product-screen';
 import EditProductScreen from '../../pages/edit-product-screen/edit-product-screen';
 import PrivateRoute from '../private-route/private-route';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App(): JSX.Element {
   return (

@@ -45,7 +45,7 @@ export class UserController {
   public async login(@Body() loginUserDto: LoginUserDto) {
     const user = await this.usersService.verifyUser(loginUserDto);
     const userToken = await this.usersService.createUserToken(user);
-    return userToken;
+    return { ...user, accessToken: userToken };
   }
 
   @ApiOperation({ summary: 'Проверка состояния пользователя' })

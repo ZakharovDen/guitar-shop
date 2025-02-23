@@ -8,7 +8,7 @@ const REQUEST_TIMEOUT = 5000;
 
 type DetailMessageType = {
   type: string;
-  message: string;
+  message: string | string[];
 }
 
 const StatusCodeMapping: Record<number, boolean> = {
@@ -16,6 +16,7 @@ const StatusCodeMapping: Record<number, boolean> = {
   [StatusCodes.UNAUTHORIZED]: true,
   [StatusCodes.NOT_FOUND]: true,
   [StatusCodes.INTERNAL_SERVER_ERROR]: true,
+  [StatusCodes.FORBIDDEN]: true,
 };
 
 const shouldDisplayError = (response: AxiosResponse) => !!StatusCodeMapping[response.status];
@@ -41,11 +42,20 @@ export const createAPI = (): AxiosInstance => {
   api.interceptors.response.use(
     (response) => response,
     (error: AxiosError<DetailMessageType>) => {
-      if (error.response && shouldDisplayError(error.response)) {
-        toast.warn(error.response.data.message);
-      } else if (error.request) {
+      console.error('Axios Error:', error);
+
+      if (error.response && shouldDisplayError(error.response) && error.response.data?.message) {
+        const message = Array.isArray(error.response.data.message)
+          ? error.response.data.message[0]
+          : error.response.data.message;
+
+        console.warn('Displaying Toast:', message);
+        toast.warn(message);
+      } else if (error.request && error.message) {
+        console.warn('Request Error:', error.message);
         toast.warn(error.message);
       } else {
+        console.error('Unexpected Error:', error);
         throw error;
       }
     }
