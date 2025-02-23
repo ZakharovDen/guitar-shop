@@ -8,11 +8,6 @@ export class LoginUserDto {
   public email: string;
 
   @ApiProperty(UserFieldDescription.Password)
-  @Length(
-    UserValidateValue.Password.MinLength,
-    UserValidateValue.Password.MaxLength,
-    { message: UserValidateMessage.Password }
-  )
   @IsString()
   public password: string;
 }
