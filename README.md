@@ -1,6 +1,6 @@
-## Описание
+## Учебный проект «Guitar Shop»
 
-Учебный проект Guitar Shop.
+* Студент: [Денис Захаров](https://up.htmlacademy.ru/nodejs-2/8/user/2486641).
 
 ## Установка проекта
 ### Frontend
