@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { UserModule } from './modules/user/user.module';
 import { ProductModule } from './modules/products/product.module';
 import { FileUploaderModule } from './modules/file-uploader/file-uploader.module';
@@ -17,7 +15,5 @@ import applicationConfig from './config/config';
       load: [applicationConfig]
     }),
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule { }

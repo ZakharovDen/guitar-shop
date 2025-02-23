@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Body, Param, Delete, Put, Query, UploadedFile, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, UseInterceptors, SerializeOptions, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, Query, UploadedFile, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, UseInterceptors, SerializeOptions, UseGuards, HttpStatus } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { ApiBearerAuth, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ProductQuery } from './product.query';
 import { PhotoParams } from './product.constant';
 import { FileUploaderService } from '../file-uploader/file-uploader.service';
@@ -23,9 +23,11 @@ export class ProductController {
 
   @Post()
   @ApiOperation({ summary: 'Создание нового товара' })
+  @ApiResponse({ type: ProductRdo, status: HttpStatus.CREATED, description: 'Новый товар создан' })
   @UseInterceptors(FileInterceptor('photo'))
   @ApiConsumes('multipart/form-data')
   @SerializeOptions({ type: ProductRdo })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   public async create(
     @Body() dto: CreateProductDto,
@@ -49,7 +51,7 @@ export class ProductController {
 
   @Get()
   @ApiOperation({ summary: 'Получение списка товаров' })
-  @ApiBearerAuth()
+  @ApiResponse({ type: ProductWithPaginationRdo, status: HttpStatus.OK, description: 'Получен список товаров' })
   @SerializeOptions({ type: ProductWithPaginationRdo })
   public async findAll(@Query() query: ProductQuery) {
     return this.productsService.findAll(query);
@@ -57,7 +59,9 @@ export class ProductController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Получение детальной информации по товару' })
+  @ApiResponse({ type: ProductRdo, status: HttpStatus.OK, description: 'Получена информация по товару' })
   @SerializeOptions({ type: ProductRdo })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   public async findOne(@Param('id') id: string) {
     return this.productsService.findOne(id);
@@ -65,9 +69,11 @@ export class ProductController {
 
   @Put(':id')
   @ApiOperation({ summary: 'Редактирование товара' })
+  @ApiResponse({ type: ProductRdo, status: HttpStatus.CREATED, description: 'Товар изменен' })
   @UseInterceptors(FileInterceptor('photo'))
   @ApiConsumes('multipart/form-data')
   @SerializeOptions({ type: ProductRdo })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   public async update(
     @Param('id') id: string,
@@ -91,7 +97,8 @@ export class ProductController {
   }
 
   @Delete(':id')
-  @ApiOperation({ summary: 'Удаление товара' })
+  @ApiOperation({ summary: 'Удаление товара', description: 'Товар удален' })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   public async remove(@Param('id') id: string) {
     return this.productsService.remove(id);

@@ -1,0 +1,431 @@
+openapi: 3.0.0
+paths:
+  /api/users:
+    post:
+      description: Пользователь создан
+      operationId: UserController_create
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserDto'
+      responses:
+        '201':
+          description: ''
+      summary: Создание нового пользователя
+      tags:
+        - Пользователи
+  /api/users/login:
+    post:
+      operationId: UserController_login
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginUserDto'
+      responses:
+        '200':
+          description: Пользователь авторизован
+        '401':
+          description: Пользователь не авторизован
+      summary: Авторизация пользователя.
+      tags:
+        - Пользователи
+  /api/users/check:
+    get:
+      operationId: UserController_checkToken
+      parameters: []
+      responses:
+        '200':
+          description: Пользователь авторизован
+        '401':
+          description: Пользователь не авторизован
+      security:
+        - bearer: []
+      summary: Проверка состояния пользователя
+      tags:
+        - Пользователи
+  /api/products:
+    post:
+      operationId: ProductController_create
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateProductDto'
+      responses:
+        '201':
+          description: Новый товар создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductRdo'
+      security:
+        - bearer: []
+      summary: Создание нового товара
+      tags:
+        - Товары
+    get:
+      operationId: ProductController_findAll
+      parameters:
+        - name: limit
+          required: false
+          in: query
+          description: Количество записей на странице
+          schema:
+            type: number
+        - name: sortField
+          required: false
+          in: query
+          description: Поле для сортировки
+          schema:
+            type: string
+            enum:
+              - createDate
+              - price
+        - name: sortDirection
+          required: false
+          in: query
+          description: Направление сортировки
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        - name: page
+          required: false
+          in: query
+          description: Номер страницы
+          schema:
+            type: number
+        - name: guitarType
+          required: false
+          in: query
+          description: Тип гитар
+          schema:
+            type: string
+            enum:
+              - electro
+              - acoustic
+              - ukulele
+        - name: guitarStringsCount
+          required: false
+          in: query
+          description: Количество струн
+          schema:
+            type: number
+            enum:
+              - 4
+              - 6
+              - 7
+              - 12
+      responses:
+        '200':
+          description: Получен список товаров
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductWithPaginationRdo'
+      summary: Получение списка товаров
+      tags:
+        - Товары
+  /api/products/{id}:
+    get:
+      operationId: ProductController_findOne
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Получена информация по товару
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductRdo'
+      security:
+        - bearer: []
+      summary: Получение детальной информации по товару
+      tags:
+        - Товары
+    put:
+      operationId: ProductController_update
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UpdateProductDto'
+      responses:
+        '201':
+          description: Товар изменен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductRdo'
+      security:
+        - bearer: []
+      summary: Редактирование товара
+      tags:
+        - Товары
+    delete:
+      description: Товар удален
+      operationId: ProductController_remove
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearer: []
+      summary: Удаление товара
+      tags:
+        - Товары
+info:
+  title: The «Guitar Shop» application
+  description: REST API
+  version: '1.0'
+  contact: {}
+tags: []
+servers: []
+components:
+  securitySchemes:
+    bearer:
+      scheme: bearer
+      bearerFormat: JWT
+      type: http
+  schemas:
+    CreateUserDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Имя пользователя
+          example: Иванов Иван
+        email:
+          type: string
+          description: Электронная почта
+          example: example@mail.com
+        password:
+          type: string
+          description: Пароль
+          example: Pa$$w0rd
+      required:
+        - name
+        - email
+        - password
+    LoginUserDto:
+      type: object
+      properties:
+        email:
+          type: string
+          description: Электронная почта
+          example: example@mail.com
+        password:
+          type: string
+          description: Пароль
+          example: Pa$$w0rd
+      required:
+        - email
+        - password
+    CreateProductDto:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Наименование
+          example: СURT Z30 Plus
+        description:
+          type: string
+          description: Описание товара
+          example: >-
+            Гитара подходит как для старта обучения, так и для домашних занятий
+            или использования в полевых условиях, например, в походах или для
+            проведения уличных выступлений.
+             Доступная стоимость, качество и надежная конструкция, а также приятный внешний вид, который сделает вас звездой вечеринки.
+        createdAt:
+          format: date-time
+          type: string
+          description: Дата добавления товара
+          example: 2025-02-23T09:08:32.224Z
+        photo:
+          type: string
+          description: Фотография
+          format: binary
+        type:
+          type: string
+          description: Тип гитары
+          example: acoustic
+        article:
+          type: string
+          description: Артикул
+          example: SO754565
+        stringsCount:
+          type: number
+          description: Количество струн
+          example: 4
+        price:
+          type: number
+          description: Цена
+          example: 100500
+      required:
+        - title
+        - description
+        - createdAt
+        - photo
+        - type
+        - article
+        - stringsCount
+        - price
+    ProductRdo:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Уникальный идентификатор
+          example: 05020c43-36c4-413a-8e0f-f3cf60fe8bbe
+        title:
+          type: string
+          description: Наименование
+          example: СURT Z30 Plus
+        description:
+          type: string
+          description: Описание товара
+          example: >-
+            Гитара подходит как для старта обучения, так и для домашних занятий
+            или использования в полевых условиях, например, в походах или для
+            проведения уличных выступлений.
+             Доступная стоимость, качество и надежная конструкция, а также приятный внешний вид, который сделает вас звездой вечеринки.
+        createdAt:
+          format: date-time
+          type: string
+          description: Дата добавления товара
+          example: 2025-02-23T09:08:32.224Z
+        photoPath:
+          type: string
+          description: Фотография товара
+          example: /static/1.jpg
+        type:
+          type: string
+          description: Тип гитары
+          example: acoustic
+        article:
+          type: string
+          description: Артикул
+          example: SO754565
+        stringsCount:
+          type: number
+          description: Количество струн
+          example: 4
+        price:
+          type: number
+          description: Цена
+          example: 100500
+      required:
+        - id
+        - title
+        - description
+        - createdAt
+        - photoPath
+        - type
+        - article
+        - stringsCount
+        - price
+    ProductWithPaginationRdo:
+      type: object
+      properties:
+        totalPages:
+          type: number
+          description: Всего страниц
+        totalItems:
+          type: number
+          description: Всего записей
+        currentPage:
+          type: number
+          description: Текущая страница
+        itemsPerPage:
+          type: number
+          description: Записей на странице
+        entities:
+          description: Данные
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductRdo'
+      required:
+        - totalPages
+        - totalItems
+        - currentPage
+        - itemsPerPage
+        - entities
+    UpdateProductDto:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Наименование
+          example: СURT Z30 Plus
+        description:
+          type: string
+          description: Описание товара
+          example: >-
+            Гитара подходит как для старта обучения, так и для домашних занятий
+            или использования в полевых условиях, например, в походах или для
+            проведения уличных выступлений.
+             Доступная стоимость, качество и надежная конструкция, а также приятный внешний вид, который сделает вас звездой вечеринки.
+        createdAt:
+          format: date-time
+          type: string
+          description: Дата добавления товара
+          example: 2025-02-23T09:08:32.224Z
+        photo:
+          type: string
+          description: Фотография
+          format: binary
+        type:
+          type: string
+          description: Тип гитары
+          example: acoustic
+        article:
+          type: string
+          description: Артикул
+          example: SO754565
+        stringsCount:
+          type: number
+          description: Количество струн
+          example: 4
+        price:
+          type: number
+          description: Цена
+          example: 100500
+        id:
+          type: string
+          description: Уникальный идентификатор
+          example: 05020c43-36c4-413a-8e0f-f3cf60fe8bbe
+      required:
+        - title
+        - description
+        - createdAt
+        - photo
+        - type
+        - article
+        - stringsCount
+        - price
+        - id

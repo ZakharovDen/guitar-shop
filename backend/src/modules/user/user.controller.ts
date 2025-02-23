@@ -27,7 +27,7 @@ export class UserController {
   ) { }
 
   @Post()
-  @ApiOperation({ summary: 'Создание нового пользователя' })
+  @ApiOperation({ summary: 'Создание нового пользователя', description: 'Пользователь создан' })
   public async create(@Body() createUserDto: CreateUserDto) {
     const user = await this.usersService.create(createUserDto);
     try {
@@ -39,9 +39,8 @@ export class UserController {
   }
 
   @ApiOperation({ summary: 'Авторизация пользователя.' })
-  @ApiResponse({ status: HttpStatus.OK })
-  @ApiResponse({ status: HttpStatus.UNAUTHORIZED })
-  @ApiBearerAuth()
+  @ApiResponse({ status: HttpStatus.OK, description: 'Пользователь авторизован' })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Пользователь не авторизован' })
   @Post('login')
   public async login(@Body() loginUserDto: LoginUserDto) {
     const user = await this.usersService.verifyUser(loginUserDto);
@@ -49,6 +48,9 @@ export class UserController {
     return userToken;
   }
 
+  @ApiOperation({ summary: 'Проверка состояния пользователя' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Пользователь авторизован' })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Пользователь не авторизован' })
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Get('check')
