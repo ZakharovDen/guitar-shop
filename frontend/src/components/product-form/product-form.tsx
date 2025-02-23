@@ -18,21 +18,19 @@ function ProductForm<T extends Product | NewProduct>({
   const navigate = useNavigate();
   const handleFormSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
-    if (!selectedFile) {
-      alert('Пожалуйста, выберите файл.');
-      return;
-    }
     const form = evt.currentTarget;
     const formData = new FormData(form);
-    formData.append('createdAt', product.createdAt.toISOString());
+    formData.append('createdAt', (typeof product.createdAt === 'object') ? product.createdAt.toISOString() : product.createdAt);
     formData.append('type', String(formData.get('item-type')));
     formData.append('article', String(formData.get('sku')));
     formData.append('stringsCount', String(formData.get('string-qty')));
+    formData.append('id', product.id);
+    formData.append('photoPath', product.photoPath);
     onSubmit(formData);
   };
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [previewURL, setPreviewURL] = useState<string | null>(null); // URL для превью
+  const [previewURL, setPreviewURL] = useState<string | null>(product.photoPath); // URL для превью
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleButtonClick = () => {
@@ -60,6 +58,7 @@ function ProductForm<T extends Product | NewProduct>({
   const handleRemoveImage = () => {
     setSelectedFile(null);
     setPreviewURL(null);
+    product.photoPath = '';
     if (fileInputRef.current) {
       fileInputRef.current.value = ''; // Очищаем значение input
     }
@@ -75,7 +74,6 @@ function ProductForm<T extends Product | NewProduct>({
                 src={previewURL}
                 srcSet={previewURL}
                 alt="Превью изображения"
-              //style={{ maxWidth: '100%', maxHeight: '200px' }} // Ограничиваем размеры превью
               />
             )}
           </div>
@@ -93,7 +91,7 @@ function ProductForm<T extends Product | NewProduct>({
               style={{ display: 'none' }}
               onChange={handleFileChange}
               ref={fileInputRef}
-              accept="image/*" // Ограничиваем выбор только изображениями
+              accept="image/*"
             />
             <button
               className="button button--small button--black-border edit-item-image__btn"
@@ -105,8 +103,8 @@ function ProductForm<T extends Product | NewProduct>({
             </button>
           </div>
         </div>
-        <FormGuitarType />
-        <FormGuitarStrings />
+        <FormGuitarType currentType={product.type} />
+        <FormGuitarStrings currentStrings={product.stringsCount} />
       </div>
       <div className="add-item__form-right">
         <div className="custom-input add-item__form-input">

@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { AppRoute } from "../../constant";
+import { AppRoute, GuitarTypes } from "../../constant";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { useEffect, useState } from "react";
 import { getProductAction } from "../../store/products/thunks";
@@ -18,7 +18,6 @@ function ProductInfoScreen(): JSX.Element {
   const handleTabClick = (tabId: 'characteristics' | 'description') => {
     setActiveTab(tabId);
   };
-
 
   useEffect(() => {
     const { id } = params;
@@ -86,7 +85,7 @@ function ProductInfoScreen(): JSX.Element {
                     </tr>
                     <tr className="tabs__table-row">
                       <td className="tabs__title">Тип:</td>
-                      <td className="tabs__value">{product.type}</td>
+                      <td className="tabs__value">{GuitarTypes.find((item) => item.id === product.type)?.label}</td>
                     </tr>
                     <tr className="tabs__table-row">
                       <td className="tabs__title">Количество струн:</td>

@@ -3,6 +3,7 @@ import ProductForm from "../../components/product-form/product-form";
 import { AppRoute } from "../../constant";
 import { useAppDispatch } from "../../hooks";
 import { postProductAction } from "../../store/products/thunks";
+import { NewProduct } from "../../types/product";
 
 function AddProductScreen(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -21,14 +22,16 @@ function AddProductScreen(): JSX.Element {
     },
   ];
 
-  const emptyProduct = {
+  const emptyProduct: NewProduct = {
+    id: '',
     title: '',
     description: '',
     createdAt: new Date(),
-    type: '',
+    type: 'electro',
     article: '',
-    stringsCount: 0,
-    price: 0
+    stringsCount: 4,
+    price: 0,
+    photoPath: ''
   }
 
   const handleFormSubmit = (formData: FormData) => {

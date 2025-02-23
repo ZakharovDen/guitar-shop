@@ -42,20 +42,16 @@ export const createAPI = (): AxiosInstance => {
   api.interceptors.response.use(
     (response) => response,
     (error: AxiosError<DetailMessageType>) => {
-      console.error('Axios Error:', error);
 
       if (error.response && shouldDisplayError(error.response) && error.response.data?.message) {
         const message = Array.isArray(error.response.data.message)
           ? error.response.data.message[0]
           : error.response.data.message;
 
-        console.warn('Displaying Toast:', message);
         toast.warn(message);
       } else if (error.request && error.message) {
-        console.warn('Request Error:', error.message);
         toast.warn(error.message);
       } else {
-        console.error('Unexpected Error:', error);
         throw error;
       }
     }

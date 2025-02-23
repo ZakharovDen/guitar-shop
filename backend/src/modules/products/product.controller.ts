@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, Put, Query, UploadedFile, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, UseInterceptors, SerializeOptions, UseGuards, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, Query, UploadedFile, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, UseInterceptors, SerializeOptions, UseGuards, HttpStatus, HttpException } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -84,13 +84,18 @@ export class ProductController {
           new MaxFileSizeValidator({ maxSize: PhotoParams.MaxSize }),
           new FileTypeValidator({ fileType: PhotoParams.FileType }),
         ],
-        fileIsRequired: true,
+        fileIsRequired: false,
       })
     ) photo: Express.Multer.File
   ) {
     if (photo) {
       const photoData = await this.fileUploaderService.writeFile(photo);
       dto.photoPath = `${photoData.subDirectory}\\${photoData.filename}`;
+    } else {
+      dto.photoPath = (await this.productsService.findOne(id)).photoPath;
+    }
+    if (!dto.photoPath) {
+      throw new HttpException('File is required', HttpStatus.BAD_REQUEST);
     }
     delete dto.photo;
     return this.productsService.update(id, dto);

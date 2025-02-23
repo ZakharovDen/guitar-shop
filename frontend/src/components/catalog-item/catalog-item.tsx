@@ -3,6 +3,7 @@ import { Product } from "../../types/product";
 import { AppRoute } from "../../constant";
 import { deleteProductAction } from "../../store/products/thunks";
 import { useAppDispatch } from "../../hooks";
+import dayjs from "dayjs";
 
 type CatalogItemProps = {
   product: Product;
@@ -30,7 +31,7 @@ function CatalogItem({ product }: CatalogItemProps): JSX.Element {
             <p className="catalog-item__data-title">{product.title}</p>
           </Link>
           <br></br>
-          <p className="catalog-item__data-date">{`Дата добавления ${product.createdAt}`}</p>
+          <p className="catalog-item__data-date">{`Дата добавления ${dayjs(product.createdAt).format('DD.MM.YYYY')}`}</p>
           <p className="catalog-item__data-price">{`${product.price} ₽`}</p>
         </div>
       </div>

@@ -26,9 +26,9 @@ function Filter({ onTypeChange, selectedTypes, onStringsChange, selectedStrings 
     let newSelectedStrings: GuitarStringId[] = [];
 
     if (checked) {
-      newSelectedStrings = [...selectedStrings, id as GuitarStringId];
+      newSelectedStrings = [...selectedStrings, Number(id) as GuitarStringId];
     } else {
-      newSelectedStrings = selectedStrings.filter(stringId => stringId !== id);
+      newSelectedStrings = selectedStrings.filter(stringId => stringId !== Number(id));
     }
 
     onStringsChange(newSelectedStrings);
@@ -60,12 +60,12 @@ function Filter({ onTypeChange, selectedTypes, onStringsChange, selectedStrings 
             <input
               className="visually-hidden"
               type="checkbox"
-              id={item.id}
+              id={item.id.toString()}
               name={item.name}
               checked={selectedStrings.includes(item.id)}
               onChange={handleStringsChange}
             ></input>
-            <label htmlFor={item.id}>{item.label}</label>
+            <label htmlFor={item.id.toString()}>{item.label}</label>
           </div>
         ))}
       </fieldset>

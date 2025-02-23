@@ -27,22 +27,22 @@ export enum AuthorizationStatus {
 
 export const GuitarStrings = [
   {
-    id: '4',
+    id: 4,
     name: '4-strings',
     label: 4,
   },
   {
-    id: '6',
+    id: 6,
     name: '6-strings',
     label: 6,
   },
   {
-    id: '7',
+    id: 7,
     name: '7-strings',
     label: 7,
   },
   {
-    id: '12',
+    id: 12,
     name: '12-strings',
     label: 12,
   },
