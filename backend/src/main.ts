@@ -4,14 +4,14 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ClassSerializerInterceptor, Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
+const GlobalPrefix = 'api';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
-  const globalPrefix = 'api';
   const configService = app.get(ConfigService);
   const port = configService.get('application.port');
-  app.setGlobalPrefix(globalPrefix);
+  app.setGlobalPrefix(GlobalPrefix);
   const config = new DocumentBuilder()
     .setTitle('The «Guitar Shop» application')
     .setDescription('REST API')
@@ -26,7 +26,7 @@ async function bootstrap() {
   }));
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
-  Logger.log(`🚀 Application is running on: http://localhost:${port}/${globalPrefix}`);
+  Logger.log(`🚀 Application is running on: http://localhost:${port}/${GlobalPrefix}`);
   await app.listen(port);
 }
 bootstrap();

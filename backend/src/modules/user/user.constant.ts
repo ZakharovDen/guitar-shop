@@ -1,6 +1,12 @@
-export const AUTH_USER_EXISTS = 'User with this email exists';
-export const AUTH_USER_NOT_FOUND = 'User not found';
-export const AUTH_USER_PASSWORD_WRONG = 'User password is wrong';
+export const AuthUserErrorMessage = {
+  Exists: 'User with this email exists',
+  NotFound: 'User not found',
+  PasswordWrong: 'User password is wrong',
+} as const;
+
+// export const AUTH_USER_EXISTS = 'User with this email exists';
+// export const AUTH_USER_NOT_FOUND = 'User not found';
+// export const AUTH_USER_PASSWORD_WRONG = 'User password is wrong';
 
 export const SALT_ROUNDS = 10;
 

@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'; // Используйте react-router-dom для навигации
+import { Link } from 'react-router-dom';
 
 export type BreadcrumbsItem = {
   label: string;

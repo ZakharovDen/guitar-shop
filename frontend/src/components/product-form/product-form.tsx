@@ -32,7 +32,7 @@ function ProductForm<T extends Product | NewProduct>({
   };
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [previewURL, setPreviewURL] = useState<string | null>(product.photoPath); // URL для превью
+  const [previewURL, setPreviewURL] = useState<string | null>(product.photoPath);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleButtonClick = () => {
@@ -46,14 +46,13 @@ function ProductForm<T extends Product | NewProduct>({
     setSelectedFile(file);
 
     if (file) {
-      // Создаем URL для предпросмотра изображения
       const reader = new FileReader();
       reader.onloadend = () => {
-        setPreviewURL(reader.result as string); // Преобразуем reader.result в string
+        setPreviewURL(reader.result as string);
       };
       reader.readAsDataURL(file);
     } else {
-      setPreviewURL(null); // Очищаем превью, если файл удален
+      setPreviewURL(null);
     }
   };
 
@@ -62,7 +61,7 @@ function ProductForm<T extends Product | NewProduct>({
     setPreviewURL(null);
     product.photoPath = '';
     if (fileInputRef.current) {
-      fileInputRef.current.value = ''; // Очищаем значение input
+      fileInputRef.current.value = '';
     }
   };
 

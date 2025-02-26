@@ -6,7 +6,7 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { Token } from 'src/core/interfaces/token.interface';
 import { createJWTPayload } from 'src/helpers/jwt';
 import { JwtService } from '@nestjs/jwt';
-import { AUTH_USER_NOT_FOUND, AUTH_USER_PASSWORD_WRONG } from './user.constant';
+import { AuthUserErrorMessage } from './user.constant';
 
 @Injectable()
 export class UserService {
@@ -23,11 +23,10 @@ export class UserService {
     };
     const existUser = await this.userRepository.findByEmail(email);
     if (existUser) {
-      throw new ConflictException('Пользователь с таким email уже существует.');
+      throw new ConflictException(AuthUserErrorMessage.Exists);
     }
     const userEntity = await new UserEntity(newUser).setPassword(password)
     await this.userRepository.save(userEntity);
-    // TODO: send email
     return userEntity;
   }
 
@@ -36,11 +35,11 @@ export class UserService {
     const existUser = await this.userRepository.findByEmail(email);
 
     if (!existUser) {
-      throw new NotFoundException(AUTH_USER_NOT_FOUND);
+      throw new NotFoundException(AuthUserErrorMessage.NotFound);
     }
 
     if (!await existUser.comparePassword(password)) {
-      throw new UnauthorizedException(AUTH_USER_PASSWORD_WRONG);
+      throw new UnauthorizedException(AuthUserErrorMessage.PasswordWrong);
     }
 
     return existUser;
